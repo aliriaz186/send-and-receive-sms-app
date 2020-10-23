@@ -91,3 +91,4 @@ Route::post('save-edited-message-template', "MessageTemplateController@saveEdite
 Route::post('login-staff', "StaffController@login");
 
 Route::post('/import_excel/import', 'ImportExcelController@import');
+Route::post('icoming-sms', 'HomeController@icomingSms');

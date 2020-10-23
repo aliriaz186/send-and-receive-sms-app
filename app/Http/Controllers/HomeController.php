@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Twilio\Rest\Client;
+use Twilio\TwiML\MessagingResponse;
 
 class HomeController extends Controller
 {
@@ -61,5 +62,18 @@ class HomeController extends Controller
         $chat->id_chat = $parentId;
         $chat->save();
         return redirect()->back();
+    }
+
+    public function icomingSms(){
+
+        $response = new MessagingResponse();
+        $response->message("The Robots are coming! Head for the hills!");
+
+        $chat = new Chat();
+        $chat->sender = 'unknown';
+        $chat->message = 'ok';
+        $chat->id_chat = '1';
+        $chat->save();
+        print $response;
     }
 }
