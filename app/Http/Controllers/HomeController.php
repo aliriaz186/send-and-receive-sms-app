@@ -43,12 +43,12 @@ class HomeController extends Controller
 
     public function sendSMS($parentId, Request $request){
         $number = ChatParent::where('id', $parentId)->first()['number'];
-//        $account_sid = getenv("TWILIO_SID");
-//        $auth_token = getenv("TWILIO_AUTH_TOKEN");
-//        $twilio_number = getenv("TWILIO_NUMBER");
-//        $client = new Client($account_sid, $auth_token);
-//        $client->messages->create($number,
-//            ['from' => $twilio_number, 'body' => $request->message] );
+        $account_sid = getenv("TWILIO_SID");
+        $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_number = getenv("TWILIO_NUMBER");
+        $client = new Client($account_sid, $auth_token);
+        $client->messages->create($number,
+            ['from' => $twilio_number, 'body' => $request->message] );
 
         $chat = new Chat();
         if (!empty(Session::get('isAdmin'))){
