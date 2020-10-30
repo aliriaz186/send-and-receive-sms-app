@@ -64,15 +64,14 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
-    public function icomingSms(){
-
+    public function icomingSms(Request $request){
         $response = new MessagingResponse();
-        $response->message("The Robots are coming! Head for the hills!");
-
+        $response->message("Hi, We will get back to you ASAP");
+        $chatParentId = ChatParent::where('number', $request->From)->first()['id'];
         $chat = new Chat();
-        $chat->sender = 'unknown';
-        $chat->message = 'ok';
-        $chat->id_chat = '1';
+        $chat->sender = $request->From;
+        $chat->message = $request->Body;
+        $chat->id_chat = $chatParentId;
         $chat->save();
         print $response;
     }
