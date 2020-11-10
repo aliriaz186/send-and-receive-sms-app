@@ -17,6 +17,7 @@
             <tr>
                 <th style="width: 10%">Select All <input type="checkbox" name="chat-all" id="chat-all" onchange="checkAll()"></th>
                 <th style="width: 10%">#</th>
+                <th class="text-center">Name</th>
                 <th class="text-center">Number</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -27,6 +28,7 @@
                     <tr>
                         <td><input type="checkbox" name="chat{{$key}}" id="chat{{$key}}" class="{{$chat->id}}"></td>
                         <td>{{$key + 1}}</td>
+                        <td class="text-center">{{\App\Customer::where('number', $chat->number)->first()['name'] ?? ""}}</td>
                         <td class="text-center">{{$chat->number}}</td>
                         <td class="text-center">
                             <a href="{{url('/chat-details/'.$chat->id)}}">
