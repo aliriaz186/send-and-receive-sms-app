@@ -36,6 +36,11 @@
         <!-- Icon -->
         <div class="fadeIn first">
             <h4 style="color: #0d0d0d" class="mt-4 mb-3">Admin Login</h4>
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <h4>{{$errors->first()}}</h4>
+                </div>
+            @endif
         </div>
 
         <!-- Login Form -->

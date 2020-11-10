@@ -25,6 +25,7 @@ class ImportExcelController extends Controller
 
         foreach ($dataList as $data) {
             $customer = new Customer();
+            $customer->name = $data['name'];
             $customer->number = "+" . $data['number'];
             $customer->save();
             if ($request->type == 'sms-also'){

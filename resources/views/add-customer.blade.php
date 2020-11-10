@@ -4,12 +4,12 @@
     <div class="px-5">
         <div class="container">
             <h5 class="mt-4 mb-3">Add Customer</h5>
-            <form name="customerForm" method="post" action="{{url("/save-customer")}}" style="width: 400px" onsubmit="return addCustomerValidation()">
+            <form name="customerForm" method="post" action="{{url("/save-customer")}}" style="width: 400px">
                 {{csrf_field()}}
                 <input type="hidden" name="checker" id="checker" value="default">
                 <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Enter Email">
+                    <label>Name (Optional):</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Enter Name">
                 </div>
                 <div class="form-group">
                     <label>Number:</label>

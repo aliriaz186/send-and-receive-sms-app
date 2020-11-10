@@ -49,7 +49,7 @@
             <tr>
                 <th>#</th>
                 <th class="text-center">Number</th>
-                <th class="text-center">Email</th>
+                <th class="text-center">Name</th>
                 <th class="text-center">Options</th>
             </tr>
             </thead>
@@ -59,7 +59,7 @@
                     <tr>
                         <td>{{$key + 1}}</td>
                         <td class="text-center">{{$item->number}}</td>
-                        <td class="text-center">{{$item->email}}</td>
+                        <td class="text-center">{{$item->name}}</td>
                         <td class="text-center">
                             <a href="{{url('/edit-customer/'.$item->id)}}">
                                 <button class="btn btn-secondary">Edit</button>

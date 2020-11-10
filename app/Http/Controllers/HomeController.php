@@ -6,6 +6,7 @@ use App\Admin;
 use App\Chat;
 use App\ChatParent;
 use App\Customer;
+use App\Staff;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,10 @@ class HomeController extends Controller
     {
 //        $thirtyDays = date("Y-m-d", strtotime("+32 days"));
 //        $eventsList = Event::where('user_id', Auth::user()->id)->where('start', '<' ,$thirtyDays)->where('start', '>=' ,date("Y-m-d"))->get();
-        return view('home');
+        $totalChats = ChatParent::all()->count();
+        $totalStaff = Staff::all()->count();
+        $totalCustomers = Customer::all()->count();
+        return view('home')->with(['totalChats' => $totalChats,'totalStaff' => $totalStaff,'totalCustomers' => $totalCustomers]);
     }
     public function chat(){
         $chats = ChatParent::all();
@@ -65,14 +69,14 @@ class HomeController extends Controller
     }
 
     public function icomingSms(Request $request){
-        $response = new MessagingResponse();
-        $response->message("Hi, We will get back to you ASAP");
+//        $response = new MessagingResponse();
+//        $response->message("Hi, Thankyou for your response. We will get back to you ASAP");
         $chatParentId = ChatParent::where('number', $request->From)->first()['id'];
         $chat = new Chat();
         $chat->sender = $request->From;
         $chat->message = $request->Body;
         $chat->id_chat = $chatParentId;
         $chat->save();
-        print $response;
+        print "<Response></Response>";
     }
 }

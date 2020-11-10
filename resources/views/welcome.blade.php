@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <title>Staff</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <link href="{{asset('bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/admin-login.css')}}" rel="stylesheet">
@@ -35,6 +35,11 @@
         <!-- Icon -->
         <div class="fadeIn first">
             <h4 style="color: #0d0d0d" class="mt-4 mb-3">Staff Login</h4>
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <h4>{{$errors->first()}}</h4>
+                </div>
+            @endif
         </div>
 
         <!-- Login Form -->

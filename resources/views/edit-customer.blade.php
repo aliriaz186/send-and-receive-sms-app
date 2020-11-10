@@ -9,8 +9,8 @@
                 <input hidden name="customerId" id="customerId" value="{{$customer->id}}">
                 <div class="form-group">
                     <label>Email:</label>
-                    <input type="email" class="form-control" placeholder="Enter Email" name="email" id="email"
-                           value="{{$customer->email}}">
+                    <input type="text" class="form-control" placeholder="Enter Name" name="name" id="name"
+                           value="{{$customer->name}}">
                 </div>
                 <div class="form-group">
                     <label>Number:</label>

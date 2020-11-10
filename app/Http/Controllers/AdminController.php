@@ -23,7 +23,7 @@ class AdminController extends Controller
             Session::put('isAdmin', true);
             return redirect('home');
         } else {
-            return json_encode("Invalid username or password");
+            return redirect()->back()->withErrors(['Invalid username or password']);
         }
     }
 

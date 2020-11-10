@@ -89,6 +89,7 @@ Route::get('edit-message-template/{id}', "MessageTemplateController@editMessageT
 Route::post('save-edited-message-template', "MessageTemplateController@saveEditedMessageTemplate");
 
 Route::post('login-staff', "StaffController@login");
+Route::post('send-sms-to-checked', "CustomerController@sendSmsToChecked");
 
 Route::post('/import_excel/import', 'ImportExcelController@import');
 Route::get('icoming-sms', 'HomeController@icomingSms');
