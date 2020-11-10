@@ -5,7 +5,11 @@
             @if(count($chats) != 0)
                 @foreach($chats as $key => $chat)
                     <div style="padding: 10px; border: 1px solid lightgray">
-                        From : <span style="color: blue;font-size: 12px">{{$chat->sender}} </span><br><br>
+                        From : <span style="color: blue;font-size: 12px">
+
+                            {{\App\Customer::where('number', $chat->sender)->first()['name'] ?? $chat->sender}}
+
+                        </span><br><br>
                         <span style="margin-left: 0px;font-size: 15px;font-weight: bold">{{$chat->message}}</span>
                         <br>
                         <br>

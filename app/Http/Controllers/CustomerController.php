@@ -98,9 +98,8 @@ class CustomerController extends Controller
                 $chat->message = $request->messageTemplate;
                 $chat->id_chat = $item;
                 $chat->save();
-                return json_encode(['status' => true, 'message' => "SMS Send successully"]);
-
             }
+            return json_encode(['status' => true, 'message' => "SMS Send successully"]);
         }catch (\Exception $exception){
             return json_encode(['status' => false, 'message' => "Server Error! Please try again", 'error' => $exception->getMessage()]);
         }
