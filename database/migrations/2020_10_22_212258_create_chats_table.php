@@ -18,6 +18,7 @@ class CreateChatsTable extends Migration
             $table->string('sender');
             $table->string('message')->nullable();
             $table->string('id_chat');
+            $table->string('status')->default('1');
             $table->timestamps();
         });
     }

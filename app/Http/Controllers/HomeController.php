@@ -10,6 +10,7 @@ use App\Staff;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Twilio\Rest\Client;
 use Twilio\TwiML\MessagingResponse;
@@ -42,7 +43,19 @@ class HomeController extends Controller
     }
 
     public function chatDetails($id){
-        return view('chat-details')->with(['chats' => Chat::where('id_chat', $id)->get(), 'parentId' => $id]);
+        $chat = Chat::where('id_chat', $id)->get();
+        foreach ($chat as $item)
+        {
+            if($item->status == 0)
+            {
+                $item->status = 1;
+                $item->update();
+            }
+        }
+        $chatMembers = Chat::where('id_chat', $id)->distinct('sender')->get();
+        $customerNumber = ChatParent::where('id', $id)->first()['number'];
+        $customerName = Customer::where('number', $customerNumber)->first()['name'];
+        return view('chat-details')->with(['customerNumber' => $customerNumber,'customerName' => $customerName,'chatMembers' => $chatMembers, 'chats' => Chat::where('id_chat', $id)->get(), 'parentId' => $id]);
     }
 
     public function sendSMS($parentId, Request $request){
@@ -59,7 +72,7 @@ class HomeController extends Controller
             $chat->sender = Admin::where('id', Session::get('id'))->first()['email'];
         }
         else {
-            $chat->sender = User::where('id', Session::get('userId'))->first()['name'];
+            $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
         }
 
         $chat->message = $request->message;
@@ -76,6 +89,7 @@ class HomeController extends Controller
         $chat->sender = $request->From;
         $chat->message = $request->Body;
         $chat->id_chat = $chatParentId;
+        $chat->status = 0;
         $chat->save();
         print "<Response></Response>";
     }

@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('content')
     <h1 style="text-align: center">Chat</h1>
+    <h4 style="text-align: center">Customer: <span style="font-weight: bold">{{$customerName ?? $customerNumber}}</span></h4>
+    <h4 style="text-align: center">Chat Staff: @foreach($chatMembers as $members) <span style="font-weight: bold">{{$members->sender}}</span>, @endforeach</h4>
     <div style="margin-left: 20px;height: 400px;overflow-y: scroll; border: 1px solid lightgray;padding: 10px">
             @if(count($chats) != 0)
                 @foreach($chats as $key => $chat)

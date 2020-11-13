@@ -6,6 +6,7 @@ use App\Admin;
 use App\Chat;
 use App\ChatParent;
 use App\Customer;
+use App\Staff;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,7 +61,7 @@ class CustomerController extends Controller
                 $chat->sender = Admin::where('id', Session::get('id'))->first()['email'];
             }
             else {
-                $chat->sender = User::where('id', Session::get('userId'))->first()['name'];
+                $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
             }
 
             $chat->message = $request->messageTemplate;
@@ -93,7 +94,7 @@ class CustomerController extends Controller
                     $chat->sender = Admin::where('id', Session::get('id'))->first()['email'];
                 }
                 else {
-                    $chat->sender = User::where('id', Session::get('userId'))->first()['name'];
+                    $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
                 }
                 $chat->message = $request->messageTemplate;
                 $chat->id_chat = $item;

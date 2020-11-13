@@ -103,7 +103,7 @@
                         <li class="">
                             <a href="{{env('APP_URL')}}/chat">
                                 <i class="fas fa-users"></i>
-                                <span>Chat</span>
+                                <span>Chat <span style="color: white;font-size: 12px;background: red;padding: 2px 7px 2px 5px;border-radius: 10px;margin-left: 4px;">{{\App\Chat::where('status', 0)->get()->count()}}</span></span>
                             </a>
                         </li>
                         <li class="">

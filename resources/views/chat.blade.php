@@ -19,6 +19,7 @@
                 <th style="width: 10%">#</th>
                 <th class="text-center">Name</th>
                 <th class="text-center">Number</th>
+                <th class="text-center">Unread Messages</th>
                 <th class="text-center">Options</th>
             </tr>
             </thead>
@@ -26,10 +27,11 @@
             @if(count($chats) != 0)
                 @foreach($chats as $key => $chat)
                     <tr>
-                        <td><input type="checkbox" name="chat{{$key}}" id="chat{{$key}}" class="{{$chat->id}}"></td>
+                        <td><input type="checkbox" name="chat{{$key}}" id="chat{{$key}}" class="{{$chat->id}}" onclick="rowSelected()"></td>
                         <td>{{$key + 1}}</td>
                         <td class="text-center">{{\App\Customer::where('number', $chat->number)->first()['name'] ?? ""}}</td>
                         <td class="text-center">{{$chat->number}}</td>
+                        <td class="text-center">{{\App\Chat::where('id_chat', $chat->id)->where('status', 0)->get()->count()}}</td>
                         <td class="text-center">
                             <a href="{{url('/chat-details/'.$chat->id)}}">
                                 <button class="btn btn-secondary">Open Chat</button>
@@ -80,6 +82,23 @@
         </div>
     </div>
     <script>
+        function rowSelected() {
+            let chatCount = document.getElementById('chatCount').value;
+            let checked = false;
+            for (let i=0;i<chatCount;i++){
+                if (document.getElementById('chat'+i).checked === true){
+                    checked = true;
+                }
+            }
+            if(checked) {
+
+                document.getElementById('send-to-selected-chats').style.display = 'block';
+            }else{
+                document.getElementById('send-to-selected-chats').style.display = 'none';
+
+            }
+        }
+
         function checkAll() {
             let chatCount = document.getElementById('chatCount').value;
             if(document.getElementById('chat-all').checked === true) {

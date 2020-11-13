@@ -2,10 +2,10 @@
 @section('content')
     <div class="p-4 ml-3"  style="margin-left: 20px">
         <div class="row">
-            <div class="col-md-8 mt-2">
+            <div class="col-md-7 mt-2">
                 <h2>Customer</h2>
             </div>
-            <div class="col-md-4 mt-2 row">
+            <div class="col-md-5 mt-2 row">
                 <div style="display: flex">
                     <input type="file" name="select_file" id="select_file" style="display: none" onchange="openModal()"/>
                 </div>

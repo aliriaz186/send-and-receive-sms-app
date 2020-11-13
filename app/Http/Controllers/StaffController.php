@@ -14,7 +14,7 @@ class StaffController extends Controller
         if (Staff::where(['email' => $request->email, 'password' => $request->password])->exists()) {
             $id = Staff::where(['email' => $request->email, 'password' => $request->password])->first()['id'];
             Session::put('id', $id);
-            Session::put('isAdmin', false);
+            Session::remove('isAdmin');
             return redirect('home');
         } else {
             return redirect()->back()->withErrors(['Invalid username or password']);
