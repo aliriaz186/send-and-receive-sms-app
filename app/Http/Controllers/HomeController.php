@@ -52,7 +52,7 @@ class HomeController extends Controller
                 $item->update();
             }
         }
-        $chatMembers = Chat::where('id_chat', $id)->distinct('sender')->get();
+        $chatMembers = Chat::where('id_chat', $id)->distinct()->get(['sender']);
         $customerNumber = ChatParent::where('id', $id)->first()['number'];
         $customerName = Customer::where('number', $customerNumber)->first()['name'];
         return view('chat-details')->with(['customerNumber' => $customerNumber,'customerName' => $customerName,'chatMembers' => $chatMembers, 'chats' => Chat::where('id_chat', $id)->get(), 'parentId' => $id]);
