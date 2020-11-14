@@ -27,7 +27,11 @@ class ImportExcelController extends Controller
         foreach ($dataList as $data) {
             $customer = new Customer();
             $customer->name = $data['name'];
-            $customer->number = "+" . $data['number'];
+            if(substr($data['number'], 0, 1) != '+')
+            {
+                $customer->number = '+'. $data['number'];
+            }
+//            $customer->number = "+" . $data['number'];
             $customer->save();
             if ($request->type == 'sms-also'){
                 $account_sid = getenv("TWILIO_SID");

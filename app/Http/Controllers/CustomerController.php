@@ -28,6 +28,10 @@ class CustomerController extends Controller
 
     public function saveCustomer(Request $request)
     {
+        if(substr($request->number, 0, 1) != '+')
+        {
+            $request->number = '+'. $request->number;
+        }
         if($request->checker == 'default')
         {
             $customer = new Customer();
