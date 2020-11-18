@@ -48,7 +48,7 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="chatCount" value="{{$customerCount}}">
+    <input type="hidden" id="chatCount" value="">
 
     <div class="px-5"  style="margin-left: 20px">
         <div>
@@ -132,7 +132,7 @@
     // },1000);
     window.onload = function(e){
         // $('#customer-table').DataTable();
-        $('#customer-table').DataTable({
+        var table = $('#customer-table').DataTable({
             "autoWidth": true,
             "responsive": true,
             "processing": true,
@@ -151,8 +151,10 @@
                 { "data": "name" },
                 { "data": "options" }
             ]
-
         });
+        document.getElementById('chatCount').value = table.rows().length;
+
+
     }
     function openModal() {
         document.getElementById('openModal').click();
