@@ -207,26 +207,55 @@ class CustomerController extends Controller
             if (!empty($request->custom_message)){
                 $request->messageTemplate = $request->custom_message;
             }
-            $checkedList = json_decode($request->finalCheckedArray, true);
-            foreach ($checkedList as $item){
-                $number = ChatParent::where('id', $item)->first()['number'];
-                $account_sid = getenv("TWILIO_SID");
-                $auth_token = getenv("TWILIO_AUTH_TOKEN");
-                $twilio_number = getenv("TWILIO_NUMBER");
-                $client = new Client($account_sid, $auth_token);
-                $client->messages->create( $number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
+            if (!empty($request->allSelected) && $request->allSelected == 'all'){
+                $chatParents = ChatParent::all();
+                foreach ($chatParents as $chatParent){
+                    $number = $chatParent->number;
+                    try {
+                        $account_sid = getenv("TWILIO_SID");
+                        $auth_token = getenv("TWILIO_AUTH_TOKEN");
+                        $twilio_number = getenv("TWILIO_NUMBER");
+                        $client = new Client($account_sid, $auth_token);
+                        $client->messages->create( $number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
 
-                $chat = new Chat();
-                if (!empty(Session::get('isAdmin'))){
-                    $chat->sender = Admin::where('id', Session::get('id'))->first()['email'];
+                    }catch (\Exception $exception){
+                        continue;
+                    }
+
+                    $chat = new Chat();
+                    if (!empty(Session::get('isAdmin'))){
+                        $chat->sender = Admin::where('id', Session::get('id'))->first()['email'];
+                    }
+                    else {
+                        $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
+                    }
+                    $chat->message = $request->messageTemplate;
+                    $chat->id_chat = $chatParent->id;
+                    $chat->save();
                 }
-                else {
-                    $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
+            }else{
+                $checkedList = json_decode($request->finalCheckedArray, true);
+                foreach ($checkedList as $item){
+                    $number = ChatParent::where('id', $item)->first()['number'];
+                    $account_sid = getenv("TWILIO_SID");
+                    $auth_token = getenv("TWILIO_AUTH_TOKEN");
+                    $twilio_number = getenv("TWILIO_NUMBER");
+                    $client = new Client($account_sid, $auth_token);
+                    $client->messages->create( $number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
+
+                    $chat = new Chat();
+                    if (!empty(Session::get('isAdmin'))){
+                        $chat->sender = Admin::where('id', Session::get('id'))->first()['email'];
+                    }
+                    else {
+                        $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
+                    }
+                    $chat->message = $request->messageTemplate;
+                    $chat->id_chat = $item;
+                    $chat->save();
                 }
-                $chat->message = $request->messageTemplate;
-                $chat->id_chat = $item;
-                $chat->save();
             }
+
             return json_encode(['status' => true, 'message' => "SMS Send successully"]);
         }catch (\Exception $exception){
             return json_encode(['status' => false, 'message' => "Server Error! Please try again", 'error' => $exception->getMessage()]);
