@@ -150,10 +150,15 @@
                 { "data": "number" },
                 { "data": "name" },
                 { "data": "options" }
-            ]
+            ],
+            "initComplete": function(settings, json){
+                var info = this.api().page.info();
+                document.getElementById('chatCount').value = info.recordsTotal;
+                // alert('Total records = '+ info.recordsTotal);
+            }
         });
-        alert(table.rows().length);
-        document.getElementById('chatCount').value = table.rows().length;
+        // console.log(table.rows());
+        // document.getElementById('chatCount').value = table.rows().length;
 
 
     }
