@@ -90,6 +90,9 @@ Route::post('save-edited-message-template', "MessageTemplateController@saveEdite
 
 Route::post('login-staff', "StaffController@login");
 Route::post('send-sms-to-checked', "CustomerController@sendSmsToChecked");
+Route::post('send-sms-to-checked-customers', "CustomerController@sendSmsToCheckedCustomer");
+Route::post('delete-checked-customers', "CustomerController@deleteCheckedCustomer");
+Route::post('delete-checked-chats', "CustomerController@deleteCheckedChats");
 
 Route::post('/import_excel/import', 'ImportExcelController@import');
 Route::get('icoming-sms', 'HomeController@icomingSms');

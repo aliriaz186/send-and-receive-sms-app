@@ -114,6 +114,77 @@ class CustomerController extends Controller
 
     }
 
+
+      public function sendSmsToCheckedCustomer(Request $request){
+        try {
+            if (!empty($request->custom_message)){
+                $request->messageTemplate = $request->custom_message;
+            }
+            $checkedList = json_decode($request->finalCheckedArray, true);
+            foreach ($checkedList as $item){
+
+                $number = Customer::where('id', $item)->first()['number'];
+                $account_sid = getenv("TWILIO_SID");
+                $auth_token = getenv("TWILIO_AUTH_TOKEN");
+                $twilio_number = getenv("TWILIO_NUMBER");
+                $client = new Client($account_sid, $auth_token);
+                $client->messages->create( $number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
+                $chatParentId = 0;
+                if (!ChatParent::where('number', $number)->exists()){
+                    $chatparent = new ChatParent();
+                    $chatparent->number = $number;
+                    $chatparent->save();
+                    $chatParentId = $chatparent->id;
+                }else{
+                    $chatParentId = ChatParent::where('number', $number)->first()['id'];
+                }
+
+                $chat = new Chat();
+                if (!empty(Session::get('isAdmin'))){
+                    $chat->sender = Admin::where('id', Session::get('id'))->first()['email'];
+                }
+                else {
+                    $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
+                }
+                $chat->message = $request->messageTemplate;
+                $chat->id_chat = $chatParentId;
+                $chat->save();
+            }
+            return json_encode(['status' => true, 'message' => "SMS Send successully"]);
+        }catch (\Exception $exception){
+            return json_encode(['status' => false, 'message' => "Server Error! Please try again", 'error' => $exception->getMessage()]);
+        }
+    }
+
+    public function deleteCheckedCustomer(Request $request){
+        try {
+            $checkedList = json_decode($request->finalCheckedArray, true);
+            foreach ($checkedList as $item) {
+                $number = Customer::where('id', $item)->first()['number'];
+                Customer::where('id', $item)->first()->delete();
+                if (ChatParent::where('number', $number)->exists()) {
+                    ChatParent::where('number', $number)->first()->delete();
+                }
+            }
+            return json_encode(['status' => true, 'message' => "SMS Send successully"]);
+        }catch (\Exception $exception){
+            return json_encode(['status' => false, 'message' => "Server Error! Please try again", 'error' => $exception->getMessage()]);
+        }
+    }
+
+    public function deleteCheckedChats(Request $request)
+    {
+        try {
+            $checkedList = json_decode($request->finalCheckedArray, true);
+            foreach ($checkedList as $item) {
+                $number = ChatParent::where('id', $item)->first()->delete();
+            }
+            return json_encode(['status' => true, 'message' => "SMS Send successully"]);
+        } catch (\Exception $exception) {
+            return json_encode(['status' => false, 'message' => "Server Error! Please try again", 'error' => $exception->getMessage()]);
+        }
+    }
+
     public function deleteCustomer($customerId)
     {
         Customer::where('id', $customerId)->delete();

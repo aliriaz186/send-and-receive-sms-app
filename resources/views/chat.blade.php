@@ -11,8 +11,12 @@
     <div>
         <button data-toggle="modal" data-target="#exampleModal111" class="btn btn-primary" id="send-to-selected-chats" style="margin-left: 25px;display: none">Send SMS to selected Chats</button>
     </div>
+    <div style="margin-top: 5px">
+        <button onclick="deleteSelected()" class="btn btn-danger" id="send-to-selected-chats-cus" style="margin-left: 25px;display: none">Delete Selected</button>
+
+    </div>
     <div class="px-5"  style="margin-left: 20px">
-        <table class="table">
+        <table class="table" id="chats-table">
             <thead>
             <tr>
                 <th style="width: 10%">Select All <input type="checkbox" name="chat-all" id="chat-all" onchange="checkAll()"></th>
@@ -82,6 +86,9 @@
         </div>
     </div>
     <script>
+        setTimeout(function () {
+            $('#chats-table').DataTable();
+        },1000);
         function rowSelected() {
             let chatCount = document.getElementById('chatCount').value;
             let checked = false;
@@ -93,8 +100,10 @@
             if(checked) {
 
                 document.getElementById('send-to-selected-chats').style.display = 'block';
+                document.getElementById('send-to-selected-chats-cus').style.display = 'block';
             }else{
                 document.getElementById('send-to-selected-chats').style.display = 'none';
+                document.getElementById('send-to-selected-chats-cus').style.display = 'none';
 
             }
         }
@@ -106,11 +115,13 @@
                     document.getElementById('chat'+i).checked = true;
                 }
                 document.getElementById('send-to-selected-chats').style.display = 'block';
+                document.getElementById('send-to-selected-chats-cus').style.display = 'block';
             }else{
                 for (let i=0;i<chatCount;i++){
                     document.getElementById('chat'+i).checked = false;
                 }
                 document.getElementById('send-to-selected-chats').style.display = 'none';
+                document.getElementById('send-to-selected-chats-cus').style.display = 'none';
 
             }
         }
@@ -142,6 +153,48 @@
                         swal.fire({
                             "title": "",
                             "text": "SMS Sent Successfully!",
+                            "type": "success",
+                            "showConfirmButton": true,
+                            "onClose": function (e) {
+                                window.location.reload();
+                            }
+                        })
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function (data) {
+                    alert(data.message);
+                    console.log("data", data);
+                }
+            });
+        }
+
+        function deleteSelected() {
+            let formData = new FormData();
+            let chatCount = document.getElementById('chatCount').value;
+            let finalCheckedArray = [];
+            for (let i=0;i<chatCount;i++){
+                if (document.getElementById('chat'+i).checked){
+                    finalCheckedArray.push(document.getElementById('chat'+i).classList[0]);
+                }
+            }
+            formData.append("finalCheckedArray", JSON.stringify(finalCheckedArray));
+            formData.append("_token", "{{ csrf_token() }}");
+            $.ajax
+            ({
+                type: 'POST',
+                url: `{{env('APP_URL')}}/delete-checked-chats`,
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data.status === true) {
+                        swal.fire({
+                            "title": "",
+                            "text": "Deleted Successfully!",
                             "type": "success",
                             "showConfirmButton": true,
                             "onClose": function (e) {
