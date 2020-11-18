@@ -86,9 +86,9 @@
         </div>
     </div>
     <script>
-        setTimeout(function () {
+        window.onload = function(e){
             $('#chats-table').DataTable();
-        },1000);
+        }
         function rowSelected() {
             let chatCount = document.getElementById('chatCount').value;
             let checked = false;

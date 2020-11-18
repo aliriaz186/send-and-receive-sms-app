@@ -124,9 +124,12 @@
     </div>
 @endsection
 <script>
-    setTimeout(function () {
+    // setTimeout(function () {
+    //     $('#customer-table').DataTable();
+    // },1000);
+    window.onload = function(e){
         $('#customer-table').DataTable();
-    },1000);
+    }
     function openModal() {
         document.getElementById('openModal').click();
     }
