@@ -34,11 +34,16 @@ class ImportExcelController extends Controller
 //            $customer->number = "+" . $data['number'];
             $customer->save();
             if ($request->type == 'sms-also'){
-                $account_sid = getenv("TWILIO_SID");
-                $auth_token = getenv("TWILIO_AUTH_TOKEN");
-                $twilio_number = getenv("TWILIO_NUMBER");
-                $client = new Client($account_sid, $auth_token);
-                $client->messages->create( $customer->number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
+                try {
+                    $account_sid = getenv("TWILIO_SID");
+                    $auth_token = getenv("TWILIO_AUTH_TOKEN");
+                    $twilio_number = getenv("TWILIO_NUMBER");
+                    $client = new Client($account_sid, $auth_token);
+                    $client->messages->create( $customer->number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
+
+                }catch (\Exception $exception){
+                    continue;
+                }
                 $chatParent = new ChatParent();
                 $chatParent->number = $customer->number;
                 $chatParent->save();
