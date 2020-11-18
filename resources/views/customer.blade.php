@@ -51,10 +51,13 @@
     <input type="hidden" id="chatCount" value="{{$customerCount}}">
 
     <div class="px-5"  style="margin-left: 20px">
+        <div>
+            <h3>Select All <input type="checkbox" name="chat-all" id="chat-all" onchange="checkAll()"></h3>
+        </div>
         <table class="table" id="customer-table">
             <thead>
             <tr>
-                <th style="width: 10%">Select All <input type="checkbox" name="chat-all" id="chat-all" onchange="checkAll()"></th>
+                <th style="width: 10%">Select</th>
                 <th>#</th>
                 <th class="text-center">Number</th>
                 <th class="text-center">Name</th>
@@ -201,7 +204,6 @@
             }
         }
         if(checked) {
-
             document.getElementById('send-to-selected-chats').style.display = 'block';
             document.getElementById('send-to-selected-chats-cus').style.display = 'block';
         }else{

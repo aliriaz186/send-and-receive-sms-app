@@ -46,7 +46,7 @@ class CustomerController extends Controller
         if (!empty($customers)) {
             foreach ($customers as $key => $customer) {
                 $appUrl = env('APP_URL');
-                $nestedData['select'] = "<input type=\"checkbox\" name=\"chat{{$key}}\" id=\"chat{{$key}}\" class=\"{{$customer->id}}\" onclick=\"rowSelected()\">";
+                $nestedData['select'] = "<input type=\"checkbox\" name=\"chat$key\" id=\"chat$key\" class=\"$customer->id\" onclick=\"rowSelected()\">";
                 $nestedData['id'] = $key + 1;
                 $nestedData['number'] =  $customer->number;
                 $nestedData['name'] =  $customer->name;
