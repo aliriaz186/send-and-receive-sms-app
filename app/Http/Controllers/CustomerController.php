@@ -85,7 +85,8 @@ class CustomerController extends Controller
             2 => 'name',
             3 => 'number',
             4 => 'Unread Messages',
-            5 => 'options',
+            5 => 'Customer Replied',
+            6 => 'options',
         );
         $totalData = ChatParent::count();
         $totalFiltered = $totalData;
@@ -117,6 +118,12 @@ class CustomerController extends Controller
                 }
                 $nestedData['number'] =  $chat->number;
                 $nestedData['Unread Messages'] =  \App\Chat::where('id_chat', $chat->id)->where('status', 0)->get()->count();
+                if (\App\Chat::where('id_chat', $chat->id)->where('sender', $chat->number)->exists()){
+                    $nestedData['Customer Replied'] = "<span class='text-success'>Customer Replied</span>";
+                }else{
+                    $nestedData['Customer Replied'] =  "<span class='text-danger'>Not Replied Yet</span>";
+                }
+
                 $nestedData['options'] = ' <a href="'.url("/chat-details").'/'.$chat->id.'">
                                 <button class="btn btn-secondary">Open Chat</button>
                             </a>';

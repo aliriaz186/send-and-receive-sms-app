@@ -21,7 +21,7 @@
         Launch demo modal
     </button>
     <div>
-        <button data-toggle="modal" data-target="#exampleModal111" class="btn btn-primary" id="send-to-selected-chats" style="margin-left: 25px;display: none">Send SMS to selected Chats</button>
+        <button data-toggle="modal" data-target="#exampleModal111" class="btn btn-primary" id="send-to-selected-chats" style="margin-left: 25px;display: none">Send SMS to selected Customers</button>
     </div>
     <div style="margin-top: 5px">
         <button onclick="deleteSelected()" class="btn btn-danger" id="send-to-selected-chats-cus" style="margin-left: 25px;display: none">Delete Selected</button>
@@ -58,9 +58,9 @@
             <tr>
                 <th style="width: 10%">Select</th>
                 <th>#</th>
-                <th class="text-center">Number</th>
-                <th class="text-center">Name</th>
-                <th class="text-center">Options</th>
+                <th >Number</th>
+                <th >Name</th>
+                <th>Options</th>
             </tr>
             </thead>
 {{--            <tbody>--}}

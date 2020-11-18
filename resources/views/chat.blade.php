@@ -24,10 +24,11 @@
             <tr>
                 <th style="width: 10%">Select</th>
                 <th style="width: 10%">#</th>
-                <th class="text-center">Name</th>
-                <th class="text-center">Number</th>
-                <th class="text-center">Unread Messages</th>
-                <th class="text-center">Options</th>
+                <th >Name</th>
+                <th >Number</th>
+                <th >Unread Messages</th>
+                <th >Customer Replied</th>
+                <th>Options</th>
             </tr>
             </thead>
 {{--            <tbody>--}}
@@ -112,6 +113,7 @@
                     { "data": "name" },
                     { "data": "number" },
                     { "data": "Unread Messages" },
+                    { "data": "Customer Replied" },
                     { "data": "options" }
                 ],
             });
