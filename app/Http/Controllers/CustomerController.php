@@ -64,7 +64,8 @@ class CustomerController extends Controller
             "draw" => intval($request->input('draw')),
             "recordsTotal" => intval($totalData),
             "recordsFiltered" => intval($totalFiltered),
-            "data" => $data
+            "data" => $data,
+            "currentDataCount" => count($data),
         );
 
         echo json_encode($json_data);

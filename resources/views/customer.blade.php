@@ -153,7 +153,7 @@
             ],
             "initComplete": function(settings, json){
                 var info = this.api().page.info();
-                document.getElementById('chatCount').value = info.recordsTotal;
+                document.getElementById('chatCount').value = info.length;
                 // alert('Total records = '+ info.recordsTotal);
             }
         });
