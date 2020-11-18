@@ -152,6 +152,7 @@
                 { "data": "options" }
             ]
         });
+        alert(table.rows().length);
         document.getElementById('chatCount').value = table.rows().length;
 
 
