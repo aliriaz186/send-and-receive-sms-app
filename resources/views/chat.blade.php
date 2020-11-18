@@ -94,6 +94,7 @@
         //     $('#chats-table').DataTable();
         //
         // }
+        let checkAllSelected = 'not';
         window.onload = function(e){
             var table = $('#chats-table').DataTable({
                 "autoWidth": true,
@@ -119,6 +120,7 @@
             });
         }
         function rowSelected() {
+            checkAllSelected = 'not';
             let chatCount = document.getElementById('chatCount').value;
             let checked = false;
             for (let i=0;i<chatCount;i++){
@@ -135,6 +137,7 @@
                 document.getElementById('send-to-selected-chats-cus').style.display = 'none';
 
             }
+            document.getElementById('chat-all').checked = false;
         }
 
         function checkAll() {
@@ -145,12 +148,14 @@
                 }
                 document.getElementById('send-to-selected-chats').style.display = 'block';
                 document.getElementById('send-to-selected-chats-cus').style.display = 'block';
+                checkAllSelected = 'all';
             }else{
                 for (let i=0;i<chatCount;i++){
                     document.getElementById('chat'+i).checked = false;
                 }
                 document.getElementById('send-to-selected-chats').style.display = 'none';
                 document.getElementById('send-to-selected-chats-cus').style.display = 'none';
+                checkAllSelected = 'not';
 
             }
         }
@@ -159,6 +164,7 @@
             let formData = new FormData();
             formData.append("messageTemplate", document.getElementById('messageTemplate').value);
             formData.append("custom_message", document.getElementById('custom_message').value);
+            formData.append("allSelected",  checkAllSelected);
             let chatCount = document.getElementById('chatCount').value;
             let finalCheckedArray = [];
             for (let i=0;i<chatCount;i++){
@@ -209,6 +215,7 @@
                 }
             }
             formData.append("finalCheckedArray", JSON.stringify(finalCheckedArray));
+            formData.append("allSelected",  checkAllSelected);
             formData.append("_token", "{{ csrf_token() }}");
             $.ajax
             ({
