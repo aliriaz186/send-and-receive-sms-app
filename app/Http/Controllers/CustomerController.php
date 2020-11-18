@@ -17,8 +17,8 @@ class CustomerController extends Controller
 {
     public function getCustomerListView()
     {
-        $customerCount = Customer::all()->count();
-        return view('customer')->with(['customerCount' => $customerCount]);
+//        $customerCount = Customer::all()->count();
+        return view('customer');
     }
 
 
@@ -55,6 +55,57 @@ class CustomerController extends Controller
                             </a>
                             <a href="'.url("/delete-customer/").'/'.$customer->id.'">
                                 <button class="btn btn-danger">Delete</button>
+                            </a>';
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data = array(
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data,
+            "currentDataCount" => count($data),
+        );
+
+        echo json_encode($json_data);
+    }
+
+    public function getAllChats(Request $request)
+    {
+        $columns = array(
+            0 => 'select',
+            1 => 'id',
+            2 => 'name',
+            3 => 'number',
+            4 => 'Unread Messages',
+            5 => 'options',
+        );
+        $totalData = ChatParent::count();
+        $totalFiltered = $totalData;
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        if (empty($request->input('search.value'))) {
+            $chats = ChatParent::offset($start)->limit($limit)->get();
+        } else {
+            $search = $request->input('search.value');
+            $chats = ChatParent::where('id', 'LIKE', "%{$search}%")->orWhere('number', 'LIKE', "%{$search}%")->offset($start)->limit($limit)->get();
+            $totalFiltered = ChatParent::where('id', 'LIKE', "%{$search}%")->orWhere('number', 'LIKE', "%{$search}%")->count();
+        }
+        $data = array();
+        if (!empty($chats)) {
+            foreach ($chats as $key => $chat) {
+                $appUrl = env('APP_URL');
+                $nestedData['select'] = "<input type=\"checkbox\" name=\"chat$key\" id=\"chat$key\" class=\"$chat->id\" onclick=\"rowSelected()\">";
+                $nestedData['id'] = $key + 1;
+                $nestedData['name'] = "";
+                if (\App\Customer::where('number', $chat->number)->exists()){
+                    $nestedData['name'] = \App\Customer::where('number', $chat->number)->first()['name'];
+                }
+                $nestedData['number'] =  $chat->number;
+                $nestedData['Unread Messages'] =  \App\Chat::where('id_chat', $chat->id)->where('status', 0)->get()->count();
+                $nestedData['options'] = ' <a href="'.url("/chat-details").'/'.$chat->id.'">
+                                <button class="btn btn-secondary">Open Chat</button>
                             </a>';
                 $data[] = $nestedData;
             }

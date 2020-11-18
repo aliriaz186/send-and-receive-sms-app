@@ -131,7 +131,6 @@
     //     $('#customer-table').DataTable();
     // },1000);
     window.onload = function(e){
-        // $('#customer-table').DataTable();
         var table = $('#customer-table').DataTable({
             "autoWidth": true,
             "responsive": true,
@@ -153,14 +152,10 @@
             ],
             "initComplete": function(settings, json){
                 var info = this.api().page.info();
+                console.log(info.length);
                 document.getElementById('chatCount').value = info.length;
-                // alert('Total records = '+ info.recordsTotal);
             }
         });
-        // console.log(table.rows());
-        // document.getElementById('chatCount').value = table.rows().length;
-
-
     }
     function openModal() {
         document.getElementById('openModal').click();

@@ -7,7 +7,7 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="chatCount" value="{{count($chats)}}">
+    <input type="hidden" id="chatCount" value="">
     <div>
         <button data-toggle="modal" data-target="#exampleModal111" class="btn btn-primary" id="send-to-selected-chats" style="margin-left: 25px;display: none">Send SMS to selected Chats</button>
     </div>
@@ -27,32 +27,32 @@
                 <th class="text-center">Options</th>
             </tr>
             </thead>
-            <tbody>
-            @if(count($chats) != 0)
-                @foreach($chats as $key => $chat)
-                    <tr>
-                        <td><input type="checkbox" name="chat{{$key}}" id="chat{{$key}}" class="{{$chat->id}}" onclick="rowSelected()"></td>
-                        <td>{{$key + 1}}</td>
-                        <td class="text-center">{{\App\Customer::where('number', $chat->number)->first()['name'] ?? ""}}</td>
-                        <td class="text-center">{{$chat->number}}</td>
-                        <td class="text-center">{{\App\Chat::where('id_chat', $chat->id)->where('status', 0)->get()->count()}}</td>
-                        <td class="text-center">
-                            <a href="{{url('/chat-details/'.$chat->id)}}">
-                                <button class="btn btn-secondary">Open Chat</button>
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
-            @else
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>No chat found!</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            @endif
-            </tbody>
+{{--            <tbody>--}}
+{{--            @if(count($chats) != 0)--}}
+{{--                @foreach($chats as $key => $chat)--}}
+{{--                    <tr>--}}
+{{--                        <td><input type="checkbox" name="chat{{$key}}" id="chat{{$key}}" class="{{$chat->id}}" onclick="rowSelected()"></td>--}}
+{{--                        <td>{{$key + 1}}</td>--}}
+{{--                        <td class="text-center">{{\App\Customer::where('number', $chat->number)->first()['name'] ?? ""}}</td>--}}
+{{--                        <td class="text-center">{{$chat->number}}</td>--}}
+{{--                        <td class="text-center">{{\App\Chat::where('id_chat', $chat->id)->where('status', 0)->get()->count()}}</td>--}}
+{{--                        <td class="text-center">--}}
+{{--                            <a href="{{url('/chat-details/'.$chat->id)}}">--}}
+{{--                                <button class="btn btn-secondary">Open Chat</button>--}}
+{{--                            </a>--}}
+{{--                        </td>--}}
+{{--                    </tr>--}}
+{{--                @endforeach--}}
+{{--            @else--}}
+{{--                <tr>--}}
+{{--                    <td></td>--}}
+{{--                    <td></td>--}}
+{{--                    <td>No chat found!</td>--}}
+{{--                    <td></td>--}}
+{{--                    <td></td>--}}
+{{--                </tr>--}}
+{{--            @endif--}}
+{{--            </tbody>--}}
         </table>
     </div>
     <div class="modal fade" id="exampleModal111" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -86,9 +86,37 @@
         </div>
     </div>
     <script>
+        // window.onload = function(e){
+        //     $('#chats-table').DataTable();
+        //
+        // }
         window.onload = function(e){
-            $('#chats-table').DataTable();
-
+            var table = $('#chats-table').DataTable({
+                "autoWidth": true,
+                "responsive": true,
+                "processing": true,
+                "serverSide": true,
+                "order": [],
+                "ajax":{
+                    "url": `{{env('APP_URL')}}/chats/all`,
+                    "dataType": "json",
+                    "type": "POST",
+                    "data":{ _token: "{{csrf_token()}}"}
+                },
+                "columns": [
+                    { "data": "select" },
+                    { "data": "id" },
+                    { "data": "name" },
+                    { "data": "number" },
+                    { "data": "Unread Messages" },
+                    { "data": "options" }
+                ],
+                "initComplete": function(settings, json){
+                    var info = this.api().page.info();
+                    console.log(info.length);
+                    document.getElementById('chatCount').value = info.length;
+                }
+            });
         }
         function rowSelected() {
             let chatCount = document.getElementById('chatCount').value;
