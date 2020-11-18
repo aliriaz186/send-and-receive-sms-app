@@ -46,7 +46,13 @@ class CustomerController extends Controller
         if (!empty($customers)) {
             foreach ($customers as $key => $customer) {
                 $appUrl = env('APP_URL');
-                $nestedData['select'] = "<input type=\"checkbox\" name=\"chat$key\" id=\"chat$key\" class=\"$customer->id\" onclick=\"rowSelected()\">";
+                if ($key == 0) {
+                    $chatCount = count($customers);
+                    $nestedData['select'] = "<input type=\"checkbox\" name=\"chat$key\" id=\"chat$key\" class=\"$customer->id\" onclick=\"rowSelected()\"><input type=\"hidden\" id=\"chatCount\" value='$chatCount'>";
+                }else{
+                    $nestedData['select'] = "<input type=\"checkbox\" name=\"chat$key\" id=\"chat$key\" class=\"$customer->id\" onclick=\"rowSelected()\">";
+
+                }
                 $nestedData['id'] = $key + 1;
                 $nestedData['number'] =  $customer->number;
                 $nestedData['name'] =  $customer->name;
@@ -95,8 +101,15 @@ class CustomerController extends Controller
         $data = array();
         if (!empty($chats)) {
             foreach ($chats as $key => $chat) {
-                $appUrl = env('APP_URL');
-                $nestedData['select'] = "<input type=\"checkbox\" name=\"chat$key\" id=\"chat$key\" class=\"$chat->id\" onclick=\"rowSelected()\">";
+                if ($key == 0){
+                    $chatCount = count($chats);
+                    $nestedData['select'] = "<input type=\"checkbox\" name=\"chat$key\" id=\"chat$key\" class=\"$chat->id\" onclick=\"rowSelected()\"><input type=\"hidden\" id=\"chatCount\" value='$chatCount'>";
+
+                }else{
+                    $nestedData['select'] = "<input type=\"checkbox\" name=\"chat$key\" id=\"chat$key\" class=\"$chat->id\" onclick=\"rowSelected()\">";
+                }
+//                $appUrl = env('APP_URL');
+//                $nestedData['select'] = "<input type=\"checkbox\" name=\"chat$key\" id=\"chat$key\" class=\"$chat->id\" onclick=\"rowSelected()\">";
                 $nestedData['id'] = $key + 1;
                 $nestedData['name'] = "";
                 if (\App\Customer::where('number', $chat->number)->exists()){

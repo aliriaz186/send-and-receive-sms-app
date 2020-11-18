@@ -7,7 +7,7 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="chatCount" value="">
+{{--    <input type="hidden" id="chatCount" value="">--}}
     <div>
         <button data-toggle="modal" data-target="#exampleModal111" class="btn btn-primary" id="send-to-selected-chats" style="margin-left: 25px;display: none">Send SMS to selected Chats</button>
     </div>
@@ -16,10 +16,13 @@
 
     </div>
     <div class="px-5"  style="margin-left: 20px">
+        <div>
+            <h3>Select All <input type="checkbox" name="chat-all" id="chat-all" onchange="checkAll()"></h3>
+        </div>
         <table class="table" id="chats-table">
             <thead>
             <tr>
-                <th style="width: 10%">Select All <input type="checkbox" name="chat-all" id="chat-all" onchange="checkAll()"></th>
+                <th style="width: 10%">Select</th>
                 <th style="width: 10%">#</th>
                 <th class="text-center">Name</th>
                 <th class="text-center">Number</th>
@@ -111,11 +114,6 @@
                     { "data": "Unread Messages" },
                     { "data": "options" }
                 ],
-                "initComplete": function(settings, json){
-                    var info = this.api().page.info();
-                    console.log(info.length);
-                    document.getElementById('chatCount').value = info.length;
-                }
             });
         }
         function rowSelected() {

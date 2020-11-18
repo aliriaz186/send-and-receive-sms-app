@@ -48,7 +48,6 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="chatCount" value="">
 
     <div class="px-5"  style="margin-left: 20px">
         <div>
@@ -150,11 +149,6 @@
                 { "data": "name" },
                 { "data": "options" }
             ],
-            "initComplete": function(settings, json){
-                var info = this.api().page.info();
-                console.log(info.length);
-                document.getElementById('chatCount').value = info.length;
-            }
         });
     }
     function openModal() {
