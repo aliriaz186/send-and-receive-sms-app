@@ -17,9 +17,60 @@ class CustomerController extends Controller
 {
     public function getCustomerListView()
     {
-        $customer = Customer::all();
-        return view('customer')->with(['customer' => $customer]);
+        $customerCount = Customer::all()->count();
+        return view('customer')->with(['customerCount' => $customerCount]);
     }
+
+
+    public function getAll(Request $request)
+    {
+        $columns = array(
+            0 => 'select',
+            1 => 'id',
+            2 => 'number',
+            3 => 'name',
+            4 => 'options',
+        );
+        $totalData = Customer::count();
+        $totalFiltered = $totalData;
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        if (empty($request->input('search.value'))) {
+            $customers = Customer::offset($start)->limit($limit)->get();
+        } else {
+            $search = $request->input('search.value');
+            $customers = Customer::where('id', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")->orWhere('number', 'LIKE', "%{$search}%")->offset($start)->limit($limit)->get();
+            $totalFiltered = Customer::where('id', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")->orWhere('number', 'LIKE', "%{$search}%")->count();
+        }
+        $data = array();
+        if (!empty($customers)) {
+            foreach ($customers as $key => $customer) {
+                $appUrl = env('APP_URL');
+                $nestedData['select'] = "<input type=\"checkbox\" name=\"chat{{$key}}\" id=\"chat{{$key}}\" class=\"{{$customer->id}}\" onclick=\"rowSelected()\">";
+                $nestedData['id'] = $key + 1;
+                $nestedData['number'] =  $customer->number;
+                $nestedData['name'] =  $customer->name;
+                $nestedData['options'] = '<a href="'.url("/edit-customer").'/'.$customer->id.'">
+                                <button class="btn btn-secondary">Edit</button>
+                            </a>
+                            <a href="'.url("/delete-customer/").'/'.$customer->id.'">
+                                <button class="btn btn-danger">Delete</button>
+                            </a>';
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data = array(
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data
+        );
+
+        echo json_encode($json_data);
+    }
+
+
 
     public function getAddCustomerView()
     {

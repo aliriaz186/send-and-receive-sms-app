@@ -88,6 +88,7 @@
     <script>
         window.onload = function(e){
             $('#chats-table').DataTable();
+
         }
         function rowSelected() {
             let chatCount = document.getElementById('chatCount').value;

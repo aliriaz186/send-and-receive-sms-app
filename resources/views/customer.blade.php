@@ -48,7 +48,7 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="chatCount" value="{{count($customer)}}">
+    <input type="hidden" id="chatCount" value="{{$customerCount}}">
 
     <div class="px-5"  style="margin-left: 20px">
         <table class="table" id="customer-table">
@@ -61,34 +61,34 @@
                 <th class="text-center">Options</th>
             </tr>
             </thead>
-            <tbody>
-            @if(count($customer) != 0)
-                @foreach($customer as $key => $item)
-                    <tr>
-                        <td><input type="checkbox" name="chat{{$key}}" id="chat{{$key}}" class="{{$item->id}}" onclick="rowSelected()"></td>
-                        <td>{{$key + 1}}</td>
-                        <td class="text-center">{{$item->number}}</td>
-                        <td class="text-center">{{$item->name}}</td>
-                        <td class="text-center">
-                            <a href="{{url('/edit-customer/'.$item->id)}}">
-                                <button class="btn btn-secondary">Edit</button>
-                            </a>
-                            <a href="{{url('/delete-customer/'.$item->id)}}">
-                                <button class="btn btn-danger">Delete</button>
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
-            @else
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>No customers found!</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            @endif
-            </tbody>
+{{--            <tbody>--}}
+{{--            @if(count($customer) != 0)--}}
+{{--                @foreach($customer as $key => $item)--}}
+{{--                    <tr>--}}
+{{--                        <td><input type="checkbox" name="chat{{$key}}" id="chat{{$key}}" class="{{$item->id}}" onclick="rowSelected()"></td>--}}
+{{--                        <td>{{$key + 1}}</td>--}}
+{{--                        <td class="text-center">{{$item->number}}</td>--}}
+{{--                        <td class="text-center">{{$item->name}}</td>--}}
+{{--                        <td class="text-center">--}}
+{{--                            <a href="{{url('/edit-customer/'.$item->id)}}">--}}
+{{--                                <button class="btn btn-secondary">Edit</button>--}}
+{{--                            </a>--}}
+{{--                            <a href="{{url('/delete-customer/'.$item->id)}}">--}}
+{{--                                <button class="btn btn-danger">Delete</button>--}}
+{{--                            </a>--}}
+{{--                        </td>--}}
+{{--                    </tr>--}}
+{{--                @endforeach--}}
+{{--            @else--}}
+{{--                <tr>--}}
+{{--                    <td></td>--}}
+{{--                    <td></td>--}}
+{{--                    <td>No customers found!</td>--}}
+{{--                    <td></td>--}}
+{{--                    <td></td>--}}
+{{--                </tr>--}}
+{{--            @endif--}}
+{{--            </tbody>--}}
         </table>
     </div>
 
@@ -128,7 +128,28 @@
     //     $('#customer-table').DataTable();
     // },1000);
     window.onload = function(e){
-        $('#customer-table').DataTable();
+        // $('#customer-table').DataTable();
+        $('#customer-table').DataTable({
+            "autoWidth": true,
+            "responsive": true,
+            "processing": true,
+            "serverSide": true,
+            "order": [],
+            "ajax":{
+                "url": `{{env('APP_URL')}}/customers/all`,
+                "dataType": "json",
+                "type": "POST",
+                "data":{ _token: "{{csrf_token()}}"}
+            },
+            "columns": [
+                { "data": "select" },
+                { "data": "id" },
+                { "data": "number" },
+                { "data": "name" },
+                { "data": "options" }
+            ]
+
+        });
     }
     function openModal() {
         document.getElementById('openModal').click();

@@ -93,6 +93,7 @@ Route::post('send-sms-to-checked', "CustomerController@sendSmsToChecked");
 Route::post('send-sms-to-checked-customers', "CustomerController@sendSmsToCheckedCustomer");
 Route::post('delete-checked-customers', "CustomerController@deleteCheckedCustomer");
 Route::post('delete-checked-chats', "CustomerController@deleteCheckedChats");
+Route::post('customers/all', "CustomerController@getAll");
 
 Route::post('/import_excel/import', 'ImportExcelController@import');
 Route::get('icoming-sms', 'HomeController@icomingSms');
