@@ -27,39 +27,48 @@ class ImportExcelController extends Controller
         foreach ($dataList as $data) {
             $customer = new Customer();
             $customer->name = $data['name'];
-            if(substr($data['number'], 0, 1) != '+')
+            $request->number = $data['number'];
+            if(substr($request->number, 0, 2) != '+1')
             {
-                $customer->number = '+'. $data['number'];
+                if(substr($request->number, 0, 1) != '1')
+                {
+                    $request->number = '+1'. $request->number;
+                }else{
+                    $request->number = '+'. $request->number;
+                }
             }
-//            $customer->number = "+" . $data['number'];
-            $customer->save();
-            if ($request->type == 'sms-also'){
-                try {
-                    $account_sid = getenv("TWILIO_SID");
-                    $auth_token = getenv("TWILIO_AUTH_TOKEN");
-                    $twilio_number = getenv("TWILIO_NUMBER");
-                    $client = new Client($account_sid, $auth_token);
-                    $client->messages->create( $customer->number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
+            if (!Customer::where('number', $request->number)->exists()){
+                $customer->number =  $request->number;
+                $customer->save();
+                if ($request->type == 'sms-also'){
+                    try {
+                        $account_sid = getenv("TWILIO_SID");
+                        $auth_token = getenv("TWILIO_AUTH_TOKEN");
+                        $twilio_number = getenv("TWILIO_NUMBER");
+                        $client = new Client($account_sid, $auth_token);
+                        $client->messages->create( $customer->number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
 
-                }catch (\Exception $exception){
-                    continue;
-                }
-                $chatParent = new ChatParent();
-                $chatParent->number = $customer->number;
-                $chatParent->save();
+                    }catch (\Exception $exception){
+                        continue;
+                    }
+                    $chatParent = new ChatParent();
+                    $chatParent->number = $customer->number;
+                    $chatParent->save();
 
-                $chat = new Chat();
-                if (!empty(Session::get('isAdmin'))){
-                    $chat->sender = Admin::where('id', Session::get('id'))->first()['email'];
-                }
-                else {
-                    $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
-                }
+                    $chat = new Chat();
+                    if (!empty(Session::get('isAdmin'))){
+                        $chat->sender = Admin::where('id', Session::get('id'))->first()['email'];
+                    }
+                    else {
+                        $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
+                    }
 
-                $chat->message = $request->messageTemplate;
-                $chat->id_chat = $chatParent->id;
-                $chat->save();
+                    $chat->message = $request->messageTemplate;
+                    $chat->id_chat = $chatParent->id;
+                    $chat->save();
+                }
             }
+
         }
         return json_encode(['status' => true, 'message' => 'Excel Data Imported successfully.']);
     }

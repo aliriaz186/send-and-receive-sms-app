@@ -96,8 +96,13 @@ class CustomerController extends Controller
             $chats = ChatParent::offset($start)->limit($limit)->get();
         } else {
             $search = $request->input('search.value');
-            $chats = ChatParent::where('id', 'LIKE', "%{$search}%")->orWhere('number', 'LIKE', "%{$search}%")->offset($start)->limit($limit)->get();
-            $totalFiltered = ChatParent::where('id', 'LIKE', "%{$search}%")->orWhere('number', 'LIKE', "%{$search}%")->count();
+            $customers = Customer::where('name', 'LIKE', "%{$search}%")->get();
+            $customerNumbers = [];
+            foreach ($customers as $customer){
+                array_push($customerNumbers, $customer->number);
+            }
+            $chats = ChatParent::where('id', 'LIKE', "%{$search}%")->orWhere('number', 'LIKE', "%{$search}%")->orWhereIn('number', $customerNumbers)->offset($start)->limit($limit)->get();
+            $totalFiltered = ChatParent::where('id', 'LIKE', "%{$search}%")->orWhere('number', 'LIKE', "%{$search}%")->orWhereIn('number', $customerNumbers)->count();
         }
         $data = array();
         if (!empty($chats)) {
@@ -127,7 +132,14 @@ class CustomerController extends Controller
                 $nestedData['options'] = ' <a href="'.url("/chat-details").'/'.$chat->id.'">
                                 <button class="btn btn-secondary">Open Chat</button>
                             </a>';
-                $data[] = $nestedData;
+                if ($request->type == "all"){
+                    $data[] = $nestedData;
+                }elseif ($request->type == "replied" && \App\Chat::where('id_chat', $chat->id)->where('sender', $chat->number)->exists()){
+                    $data[] = $nestedData;
+                }elseif ($request->type == "notreplied" && !\App\Chat::where('id_chat', $chat->id)->where('sender', $chat->number)->exists()){
+                    $data[] = $nestedData;
+                }
+
             }
         }
 
@@ -151,12 +163,22 @@ class CustomerController extends Controller
 
     public function saveCustomer(Request $request)
     {
-        if(substr($request->number, 0, 1) != '+')
+        if(substr($request->number, 0, 2) != '+1')
         {
-            $request->number = '+'. $request->number;
+            if(substr($request->number, 0, 1) != '1')
+            {
+                $request->number = '+1'. $request->number;
+            }else{
+                $request->number = '+'. $request->number;
+            }
+        }
+
+        if (Customer::where('number', $request->number)->exists()){
+            return redirect()->back()->withErrors('Phone number already Exists');
         }
         if($request->checker == 'default')
         {
+
             $customer = new Customer();
             $customer->name = $request->name;
             $customer->number = $request->number;

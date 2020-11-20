@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('content')
+
+
     <div class="p-4 ml-3"  style="margin-left: 20px">
         <div class="row">
             <div class="col-md-8 mt-2">
@@ -7,6 +9,21 @@
             </div>
         </div>
     </div>
+    <div style="margin-left: 25px;padding: 15px;">
+        <h3>Filter Chats</h3>
+        <div class="row">
+            <div class="col-md-3">
+                    <button class="btn btn-success" id="all-chats" style="width: 90%" onclick="getChats('all')">All Chats</button>
+            </div>
+            <div class="col-md-3">
+                    <button  style="width: 90%" id="replied-chats" class="btn btn-block" onclick="getChats('replied')">Replied</button>
+            </div>
+            <div class="col-md-3">
+                    <button  style="width: 90%" id="notreplied-chats" class="btn btn-block" onclick="getChats('notreplied')">Not Replied Yet</button>
+            </div>
+        </div>
+    </div>
+
 {{--    <input type="hidden" id="chatCount" value="">--}}
     <div>
         <button data-toggle="modal" data-target="#exampleModal111" class="btn btn-primary" id="send-to-selected-chats" style="margin-left: 25px;display: none">Send SMS to selected Chats</button>
@@ -106,7 +123,38 @@
                     "url": `{{env('APP_URL')}}/chats/all`,
                     "dataType": "json",
                     "type": "POST",
-                    "data":{ _token: "{{csrf_token()}}"}
+                    "data":{ _token: "{{csrf_token()}}", type : 'all'}
+                },
+                "columns": [
+                    { "data": "select" },
+                    { "data": "id" },
+                    { "data": "name" },
+                    { "data": "number" },
+                    { "data": "Unread Messages" },
+                    { "data": "Customer Replied" },
+                    { "data": "options" }
+                ],
+            });
+        }
+
+        function getChats(type) {
+            document.getElementById('all-chats').classList.remove('btn-success');
+            document.getElementById('replied-chats').classList.remove('btn-success');
+            document.getElementById('notreplied-chats').classList.remove('btn-success');
+            document.getElementById(type+'-chats').classList.remove('btn-block');
+            document.getElementById(type+'-chats').classList.add('btn-success');
+            $("#chats-table").DataTable().destroy();
+            var table = $('#chats-table').DataTable({
+                "autoWidth": true,
+                "responsive": true,
+                "processing": true,
+                "serverSide": true,
+                "order": [],
+                "ajax":{
+                    "url": `{{env('APP_URL')}}/chats/all`,
+                    "dataType": "json",
+                    "type": "POST",
+                    "data":{ _token: "{{csrf_token()}}", type : type}
                 },
                 "columns": [
                     { "data": "select" },

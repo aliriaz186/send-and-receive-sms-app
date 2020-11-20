@@ -4,6 +4,11 @@
     <div class="px-5">
         <div class="container">
             <h5 class="mt-4 mb-3">Add Customer</h5>
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <h4>{{$errors->first()}}</h4>
+                </div>
+            @endif
             <form name="customerForm" method="post" action="{{url("/save-customer")}}" style="width: 400px">
                 {{csrf_field()}}
                 <input type="hidden" name="checker" id="checker" value="default">
@@ -13,7 +18,7 @@
                 </div>
                 <div class="form-group">
                     <label>Number:</label>
-                    <input type="text" onfocusout="plusAdd()" class="form-control" name="number" id="number" placeholder="Enter Number">
+                    <input type="text" class="form-control" name="number" id="number" placeholder="Enter Number">
                 </div>
                 <div class="form-group">
                     <label style="position: relative;padding-left: 25px;">Check Box to send SMS<input
@@ -35,12 +40,12 @@
         </div>
     </div>
     <script type="text/javascript">
-        document.getElementById('number').value = '+';
-        function plusAdd(){
-            if(document.getElementById('number').value === ''){
-                document.getElementById('number').value = '+';
-            }
-        }
+        // document.getElementById('number').value = '+';
+        // function plusAdd(){
+        //     if(document.getElementById('number').value === ''){
+        //         document.getElementById('number').value = '+';
+        //     }
+        // }
 
 
         function addCustomerValidation() {
