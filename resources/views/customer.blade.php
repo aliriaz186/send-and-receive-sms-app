@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
     <div class="p-4 ml-3"  style="margin-left: 20px">
         <div class="row">
             <div class="col-md-7 mt-2">
@@ -165,6 +166,12 @@
         $.ajax
         ({
             type: 'POST',
+            beforeSend: function(){
+                $('.ajax-loader').css("visibility", "visible");
+            },
+            complete: function(){
+                $('.ajax-loader').css("visibility", "hidden");
+            },
             url: `{{env('APP_URL')}}/import_excel/import`,
             data: formData,
             contentType: false,
@@ -186,6 +193,7 @@
                     alert(data.message);
                 }
             },
+
             error: function (data) {
                 alert(data.message);
                 console.log("data", data);
@@ -250,6 +258,12 @@
         $.ajax
         ({
             type: 'POST',
+            beforeSend: function(){
+                $('.ajax-loader').css("visibility", "visible");
+            },
+            complete: function(){
+                $('.ajax-loader').css("visibility", "hidden");
+            },
             url: `{{env('APP_URL')}}/send-sms-to-checked-customers`,
             data: formData,
             contentType: false,
@@ -293,6 +307,12 @@
         $.ajax
         ({
             type: 'POST',
+            beforeSend: function(){
+                $('.ajax-loader').css("visibility", "visible");
+            },
+            complete: function(){
+                $('.ajax-loader').css("visibility", "hidden");
+            },
             url: `{{env('APP_URL')}}/delete-checked-customers`,
             data: formData,
             contentType: false,

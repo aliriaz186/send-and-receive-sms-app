@@ -225,6 +225,12 @@
             $.ajax
             ({
                 type: 'POST',
+                beforeSend: function(){
+                    $('.ajax-loader').css("visibility", "visible");
+                },
+                complete: function(){
+                    $('.ajax-loader').css("visibility", "hidden");
+                },
                 url: `{{env('APP_URL')}}/send-sms-to-checked`,
                 data: formData,
                 contentType: false,
@@ -268,6 +274,12 @@
             $.ajax
             ({
                 type: 'POST',
+                beforeSend: function(){
+                    $('.ajax-loader').css("visibility", "visible");
+                },
+                complete: function(){
+                    $('.ajax-loader').css("visibility", "hidden");
+                },
                 url: `{{env('APP_URL')}}/delete-checked-chats`,
                 data: formData,
                 contentType: false,

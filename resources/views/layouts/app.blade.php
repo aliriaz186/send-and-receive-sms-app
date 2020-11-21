@@ -23,9 +23,28 @@
     <script type="text/javascript" src="{{ \Illuminate\Support\Facades\URL::asset('popper/popper.min.js')}}"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 {{--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>--}}
+    <style>
+        .ajax-loader {
+            visibility: hidden;
+            background-color: rgba(255,255,255,0.7);
+            position: absolute;
+            z-index: +1000000 !important;
+            width: 100%;
+            height:100%;
+        }
 
+        .ajax-loader img {
+            position: relative;
+            top:50%;
+            left:50%;
+        }
+    </style>
 </head>
 <body>
+
+<div class="ajax-loader">
+    <img src="{{ url('/ajax-loader.gif') }}" class="img-responsive" />
+</div>
 <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
 {{--        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"--}}
