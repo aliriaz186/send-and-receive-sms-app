@@ -163,6 +163,7 @@ class CustomerController extends Controller
 
     public function saveCustomer(Request $request)
     {
+        set_time_limit(360000);
         if(substr($request->number, 0, 2) != '+1')
         {
             if(substr($request->number, 0, 1) != '1')
@@ -226,6 +227,7 @@ class CustomerController extends Controller
 
     public function sendSmsToChecked(Request $request){
         try {
+            set_time_limit(360000);
             if (!empty($request->custom_message)){
                 $request->messageTemplate = $request->custom_message;
             }
@@ -291,6 +293,7 @@ class CustomerController extends Controller
 
       public function sendSmsToCheckedCustomer(Request $request){
         try {
+            set_time_limit(360000);
             if (!empty($request->custom_message)){
                 $request->messageTemplate = $request->custom_message;
             }
@@ -377,6 +380,7 @@ class CustomerController extends Controller
 
     public function deleteCheckedCustomer(Request $request){
         try {
+            set_time_limit(360000);
             if (!empty($request->allSelected) && $request->allSelected == 'all'){
                 $customers = Customer::all();
                 foreach ($customers as $customer) {
@@ -406,6 +410,7 @@ class CustomerController extends Controller
     public function deleteCheckedChats(Request $request)
     {
         try {
+            set_time_limit(360000);
             if (!empty($request->allSelected) && $request->allSelected == 'all'){
                 $checkedList = json_decode($request->finalCheckedArray, true);
                 $chatParent = ChatParent::all();

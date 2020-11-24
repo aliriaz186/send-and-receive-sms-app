@@ -20,6 +20,7 @@ class ImportExcelController extends Controller
 {
     function import(Request $request)
     {
+        set_time_limit(360000);
         $csvModal = new CSVModal();
         \Excel::import($csvModal, request()->file('select_file'));
         $dataList = $csvModal->getData();
