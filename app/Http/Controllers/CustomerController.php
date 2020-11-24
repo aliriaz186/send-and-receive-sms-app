@@ -243,7 +243,7 @@ class CustomerController extends Controller
                         $client->messages->create( $number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
 
                     }catch (\Exception $exception){
-                        continue;
+//                        continue;
                     }
 
                     $chat = new Chat();
@@ -311,7 +311,7 @@ class CustomerController extends Controller
                         $client->messages->create( $number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
 
                     }catch (\Exception $exception){
-                        continue;
+//                        continue;
                     }
 
                     $chatParentId = 0;
