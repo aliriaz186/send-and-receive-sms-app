@@ -82,15 +82,18 @@ class HomeController extends Controller
     }
 
     public function icomingSms(Request $request){
-//        $response = new MessagingResponse();
-//        $response->message("Hi, Thankyou for your response. We will get back to you ASAP");
-        $chatParentId = ChatParent::where('number', $request->From)->first()['id'];
-        $chat = new Chat();
-        $chat->sender = $request->From;
-        $chat->message = $request->Body;
-        $chat->id_chat = $chatParentId;
-        $chat->status = 0;
-        $chat->save();
-        print "<Response></Response>";
+        try {
+            $chatParentId = ChatParent::where('number', $request->From)->first()['id'];
+            $chat = new Chat();
+            $chat->sender = $request->From;
+            $chat->message = $request->Body;
+            $chat->id_chat = $chatParentId;
+            $chat->status = 0;
+            $chat->save();
+            print "<Response></Response>";
+        }catch (\Exception $exception){
+            print "<Response></Response>";
+        }
+
     }
 }
