@@ -195,7 +195,15 @@
             },
 
             error: function (data) {
-                alert(data.message);
+                swal.fire({
+                    "title": "",
+                    "text": "Maximum execution reached on server. Please try again with other contacts",
+                    "type": "success",
+                    "showConfirmButton": true,
+                    "onClose": function (e) {
+                        window.location.reload();
+                    }
+                })
                 console.log("data", data);
             }
         });
@@ -286,7 +294,15 @@
                 }
             },
             error: function (data) {
-                alert(data.message);
+                swal.fire({
+                    "title": "",
+                    "text": "Maximum execution reached on server. Please try again with other contacts",
+                    "type": "success",
+                    "showConfirmButton": true,
+                    "onClose": function (e) {
+                        window.location.reload();
+                    }
+                })
                 console.log("data", data);
             }
         });

@@ -50,7 +50,7 @@ class ImportExcelController extends Controller
                         $client->messages->create( $customer->number, ['from' => $twilio_number, 'body' => $request->messageTemplate]);
 
                     }catch (\Exception $exception){
-                        continue;
+//                        continue;
                     }
                     $chatParent = new ChatParent();
                     $chatParent->number = $customer->number;
