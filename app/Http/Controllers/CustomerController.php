@@ -10,6 +10,7 @@ use App\Staff;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Twilio\Rest\Client;
 
@@ -36,7 +37,42 @@ class CustomerController extends Controller
         $limit = $request->input('length');
         $start = $request->input('start');
         if (empty($request->input('search.value'))) {
-            $customers = Customer::offset($start)->limit($limit)->get();
+            if ($request->type == "all"){
+                $customers = Customer::offset($start)->limit($limit)->get();
+            }elseif ($request->type == "messagesent" ){
+                $customers = DB::table('customers')
+                    ->whereExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chat_parents')
+                            ->whereRaw('customers.number = chat_parents.number');
+                    })
+                    ->offset($start)->limit($limit)->get();
+
+                $totalData =  DB::table('customers')
+                    ->whereExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chat_parents')
+                            ->whereRaw('customers.number = chat_parents.number');
+                    })->count();
+                $totalFiltered = $totalData;
+            }elseif ($request->type == "messagenotsent" ){
+                $customers = DB::table('customers')
+                    ->whereNotExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chat_parents')
+                            ->whereRaw('customers.number = chat_parents.number');
+                    })
+                    ->offset($start)->limit($limit)->get();
+
+                $totalData =  DB::table('customers')
+                    ->whereNotExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chat_parents')
+                            ->whereRaw('customers.number = chat_parents.number');
+                    })->count();
+                $totalFiltered = $totalData;
+            }
+
         } else {
             $search = $request->input('search.value');
             $customers = Customer::where('id', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")->orWhere('number', 'LIKE', "%{$search}%")->offset($start)->limit($limit)->get();
@@ -62,6 +98,13 @@ class CustomerController extends Controller
                             <a href="'.url("/delete-customer/").'/'.$customer->id.'">
                                 <button class="btn btn-danger">Delete</button>
                             </a>';
+//                if ($request->type == "all"){
+//                    $data[] = $nestedData;
+//                }elseif ($request->type == "messagesent" && \App\ChatParent::where('number', $customer->number)->exists()){
+//                    $data[] = $nestedData;
+//                }elseif ($request->type == "messagenotsent" && !\App\ChatParent::where('number', $customer->number)->exists()){
+//                    $data[] = $nestedData;
+//                }
                 $data[] = $nestedData;
             }
         }
@@ -93,7 +136,46 @@ class CustomerController extends Controller
         $limit = $request->input('length');
         $start = $request->input('start');
         if (empty($request->input('search.value'))) {
-            $chats = ChatParent::offset($start)->limit($limit)->get();
+
+            if ($request->type == "all"){
+                $chats = ChatParent::offset($start)->limit($limit)->get();
+            }elseif ($request->type == "replied"){
+                $chats = DB::table('chat_parents')
+                    ->whereExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chats')
+                            ->whereRaw('chat_parents.id = chats.id_chat')
+                            ->whereRaw('chat_parents.number = chats.sender');
+                    })
+                    ->offset($start)->limit($limit)->get();
+
+                $totalData =  DB::table('chat_parents')
+                    ->whereExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chats')
+                            ->whereRaw('chat_parents.id = chats.id_chat')
+                            ->whereRaw('chat_parents.number = chats.sender');
+                    })->count();
+                $totalFiltered = $totalData;
+            }elseif ($request->type == "notreplied"){
+                $chats = DB::table('chat_parents')
+                    ->whereNotExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chats')
+                            ->whereRaw('chat_parents.id = chats.id_chat')
+                            ->whereRaw('chat_parents.number = chats.sender');
+                    })
+                    ->offset($start)->limit($limit)->get();
+
+                $totalData =  DB::table('chat_parents')
+                    ->whereNotExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chats')
+                            ->whereRaw('chat_parents.id = chats.id_chat')
+                            ->whereRaw('chat_parents.number = chats.sender');
+                    })->count();
+                $totalFiltered = $totalData;
+            }
         } else {
             $search = $request->input('search.value');
             $customers = Customer::where('name', 'LIKE', "%{$search}%")->get();
@@ -132,13 +214,14 @@ class CustomerController extends Controller
                 $nestedData['options'] = ' <a href="'.url("/chat-details").'/'.$chat->id.'">
                                 <button class="btn btn-secondary">Open Chat</button>
                             </a>';
-                if ($request->type == "all"){
-                    $data[] = $nestedData;
-                }elseif ($request->type == "replied" && \App\Chat::where('id_chat', $chat->id)->where('sender', $chat->number)->exists()){
-                    $data[] = $nestedData;
-                }elseif ($request->type == "notreplied" && !\App\Chat::where('id_chat', $chat->id)->where('sender', $chat->number)->exists()){
-                    $data[] = $nestedData;
-                }
+//                if ($request->type == "all"){
+//                    $data[] = $nestedData;
+//                }elseif ($request->type == "replied" && \App\Chat::where('id_chat', $chat->id)->where('sender', $chat->number)->exists()){
+//                    $data[] = $nestedData;
+//                }elseif ($request->type == "notreplied" && !\App\Chat::where('id_chat', $chat->id)->where('sender', $chat->number)->exists()){
+//                    $data[] = $nestedData;
+//                }
+                $data[] = $nestedData;
 
             }
         }
@@ -297,9 +380,26 @@ class CustomerController extends Controller
             if (!empty($request->custom_message)){
                 $request->messageTemplate = $request->custom_message;
             }
-
+            $limit = 5;
             if (!empty($request->allSelected) && $request->allSelected == 'all'){
-                $customers = Customer::all();
+                if ($request->filterType == "all") {
+                    $customers = Customer::all();
+                } elseif ($request->type == "messagesent") {
+                    $customers = DB::table('customers')
+                        ->whereExists( function ($query) use ($limit) {
+                            $query->select(DB::raw(1))
+                                ->from('chat_parents')
+                                ->whereRaw('customers.number = chat_parents.number');
+                        })->get();
+                } elseif ($request->type == "messagenotsent") {
+                    $customers = DB::table('customers')
+                        ->whereNotExists( function ($query) use ($limit) {
+                            $query->select(DB::raw(1))
+                                ->from('chat_parents')
+                                ->whereRaw('customers.number = chat_parents.number');
+                        })->get();
+                }
+
                 foreach ($customers as $customer){
 
                     $number = Customer::where('id', $customer->id)->first()['number'];

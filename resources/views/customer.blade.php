@@ -17,6 +17,20 @@
             </div>
         </div>
     </div>
+    <div style="margin-left: 25px;padding: 15px;">
+        <h3>Filter Customers</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <button class="btn btn-success" id="all-chats" style="width: 90%" onclick="getCustomers('all')">All Customers</button>
+            </div>
+            <div class="col-md-3">
+                <button  style="width: 90%" id="messagesent-chats" class="btn btn-block" onclick="getCustomers('messagesent')">Message Sent Customers</button>
+            </div>
+            <div class="col-md-3">
+                <button  style="width: 90%" id="messagenotsent-chats" class="btn btn-block" onclick="getCustomers('messagenotsent')">Message Not Sent Customers</button>
+            </div>
+        </div>
+    </div>
 
     <button id="openModal" style="display:none;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
         Launch demo modal
@@ -131,6 +145,7 @@
     //     $('#customer-table').DataTable();
     // },1000);
     let checkAllSelected = 'not';
+    let filterType = "all";
     window.onload = function(e){
         var table = $('#customer-table').DataTable({
             "autoWidth": true,
@@ -142,7 +157,36 @@
                 "url": `{{env('APP_URL')}}/customers/all`,
                 "dataType": "json",
                 "type": "POST",
-                "data":{ _token: "{{csrf_token()}}"}
+                "data":{ _token: "{{csrf_token()}}", type : 'all'}
+            },
+            "columns": [
+                { "data": "select" },
+                { "data": "id" },
+                { "data": "number" },
+                { "data": "name" },
+                { "data": "options" }
+            ],
+        });
+    }
+    function getCustomers(type) {
+        filterType = type;
+        document.getElementById('all-chats').classList.remove('btn-success');
+        document.getElementById('messagesent-chats').classList.remove('btn-success');
+        document.getElementById('messagenotsent-chats').classList.remove('btn-success');
+        document.getElementById(type+'-chats').classList.remove('btn-block');
+        document.getElementById(type+'-chats').classList.add('btn-success');
+        $("#customer-table").DataTable().destroy();
+        var table = $('#customer-table').DataTable({
+            "autoWidth": true,
+            "responsive": true,
+            "processing": true,
+            "serverSide": true,
+            "order": [],
+            "ajax":{
+                "url": `{{env('APP_URL')}}/customers/all`,
+                "dataType": "json",
+                "type": "POST",
+                "data":{ _token: "{{csrf_token()}}", type : type}
             },
             "columns": [
                 { "data": "select" },
@@ -254,6 +298,7 @@
         formData.append("messageTemplate", document.getElementById('messageTemplate').value);
         formData.append("custom_message", document.getElementById('custom_message').value);
         formData.append("allSelected",  checkAllSelected);
+        formData.append("filterType",  filterType);
         let chatCount = document.getElementById('chatCount').value;
         let finalCheckedArray = [];
         for (let i=0;i<chatCount;i++){
