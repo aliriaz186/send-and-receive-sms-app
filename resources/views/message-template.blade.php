@@ -12,7 +12,7 @@
     </div>
     <div class="px-5"  style="margin-left: 20px">
         <table class="table">
-            <thead>
+            <thead style="background: #05728f;color: white">
             <tr>
                 <th>#</th>
                 <th class="text-center">Title</th>

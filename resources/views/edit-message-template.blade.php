@@ -3,7 +3,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <div class="px-5">
         <div class="container">
-            <h5 class="mt-4 mb-3">Edit Message Template</h5>
+            <h1 class="mt-4 mb-3">Edit Message Template</h1>
             <form method="post" action="{{url("/save-edited-message-template")}}" style="width: 400px">
                 {{csrf_field()}}
                 <input hidden name="messageTemplateId" id="messageTemplateId" value="{{$messageTemplate->id}}">

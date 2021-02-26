@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return view('welcome');
-})->middleware('checkAuth');
+//Route::get('/', function () {
+//    return view('welcome');
+//})->middleware('checkAuth');
 //Route::get('/working-tutorial', "DomainsController@tutorialWorking")->middleware('dashboard')->name('home')->middleware('dashboard');
 //Route::get('add-password', "PasswordsController@addPassword")->middleware('dashboard');
 //Route::post('add-password', "PasswordsController@savePassword")->middleware('dashboard');
@@ -22,7 +22,7 @@ Route::get('/', function () {
 //Route::post('/domain/delete', "DomainsController@deleteDomain")->middleware('dashboard');
 //Route::get('edit/domain/{id}', "DomainsController@editDomain")->middleware('dashboard');
 Auth::routes();
-Route::get('/admin', "AdminController@loginPage")->middleware('checkAuth');
+Route::get('/', "AdminController@loginPage")->middleware('checkAuth');
 Route::post('/admin/login', "AdminController@login")->name('admin.login');
 //Route::get('admin-dashboard', "AdminController@adminDashboard");
 Route::post('admin-logout', "AdminController@logout")->name('admin.logout');

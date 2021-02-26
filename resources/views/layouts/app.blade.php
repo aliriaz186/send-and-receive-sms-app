@@ -55,15 +55,15 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <a style="float: right !important;" class="dropdown-item" href="{{ route('logout-user') }}">
-                    {{ __('Logout') }}
-                </a>
+{{--            <form class="form-inline my-2 my-lg-0">--}}
+{{--                <a style="float: right !important;" class="dropdown-item" href="{{ route('logout-user') }}">--}}
+{{--                    {{ __('Logout') }}--}}
+{{--                </a>--}}
 {{--                <form action="{{ route('logout') }}" method="POST">--}}
 {{--                    @csrf--}}
 {{--                    <button id="logoutbtn" style="opacity: 0" type="submit"></button>--}}
 {{--                </form>--}}
-            </form>
+{{--            </form>--}}
         </div>
     </nav>
 
@@ -86,12 +86,7 @@
                              alt="User picture">
                     </div>
                     <div class="user-info">
-{{--                            <span class="user-name">{{\App\User::where('id', \Illuminate\Support\Facades\Auth::user()->id)->first()['name']}}--}}
-{{--                                <strong>Smith</strong>--}}
-{{--                            </span>--}}
-{{--                        <span class="user-name">{{\App\User::where('id', \Illuminate\Support\Facades\Auth::user()->id)->first()['email']}}--}}
-{{--                                                            <strong>Smith</strong>--}}
-{{--                            </span>--}}
+                            <h4 style="color: white">Welcome Admin!</h4>
                     </div>
                 </div>
 
@@ -101,36 +96,42 @@
                         <li class="header-menu">
                             <span>General</span>
                         </li>
-                        <li class="">
+                        <li class="" style="border: 1px solid white;border-bottom: 0px">
                             <a href="{{env('APP_URL')}}/home">
                                 <i class="fa fa-tachometer-alt"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
                         @if(\Illuminate\Support\Facades\Session::get('isAdmin') === true)
-                        <li class="">
+                        <li class="" style="border: 1px solid white;border-bottom: 0px">
                             <a href="{{env('APP_URL')}}/staff">
                                 <i class="fas fa-user"></i>
                                 <span>Staff</span>
                             </a>
                         </li>
                         @endif
-                        <li class="">
+                        <li class="" style="border: 1px solid white;border-bottom: 0px">
                             <a href="{{env('APP_URL')}}/customer">
                                 <i class="fas fa-users"></i>
                                 <span>Customer</span>
                             </a>
                         </li>
-                        <li class="">
-                            <a href="{{env('APP_URL')}}/chat">
+                        <li class="" style="border: 1px solid white;border-bottom: 0px">
+                            <a href="{{env('APP_URL')}}/chat" >
                                 <i class="fas fa-users"></i>
                                 <span>Chat <span style="color: white;font-size: 12px;background: red;padding: 2px 7px 2px 5px;border-radius: 10px;margin-left: 4px;">{{\App\Chat::where('status', 0)->get()->count()}}</span></span>
                             </a>
                         </li>
-                        <li class="">
+                        <li class="" style="border: 1px solid white;border-bottom: 0px">
                             <a href="{{env('APP_URL')}}/message-template">
                                 <i class="fas fa-envelope-open"></i>
                                 <span>Messages Templates</span>
+                            </a>
+                        </li>
+                        <li class="" style="border: 1px solid white;">
+                            <a href="{{ route('logout-user') }}">
+                                <i class="fas fa-user"></i>
+                                <span>Logout</span>
                             </a>
                         </li>
                     </ul>

@@ -3,7 +3,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <div class="px-5">
         <div class="container">
-            <h5 class="mt-4 mb-3">Add Customer</h5>
+            <h1 class="mt-4 mb-3">Add Customer</h1>
             @if($errors->any())
                 <div class="alert alert-danger">
                     <h4>{{$errors->first()}}</h4>

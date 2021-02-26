@@ -35,7 +35,8 @@ class HomeController extends Controller
         $totalChats = ChatParent::all()->count();
         $totalStaff = Staff::all()->count();
         $totalCustomers = Customer::all()->count();
-        return view('home')->with(['totalChats' => $totalChats,'totalStaff' => $totalStaff,'totalCustomers' => $totalCustomers]);
+        $totalMessages = Chat::all()->count();
+        return view('home')->with(['totalMessages' => $totalMessages,'totalChats' => $totalChats,'totalStaff' => $totalStaff,'totalCustomers' => $totalCustomers]);
     }
     public function chat(){
         $chats = ChatParent::all();

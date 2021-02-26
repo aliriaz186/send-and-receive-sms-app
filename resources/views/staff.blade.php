@@ -11,8 +11,8 @@
         </div>
     </div>
     <div class="px-5" style="margin-left: 20px">
-        <table class="table">
-            <thead>
+        <table class="table table-bordered">
+            <thead style="background: #05728f;color: white">
             <tr>
                 <th>#</th>
                 <th class="text-center">Name</th>
