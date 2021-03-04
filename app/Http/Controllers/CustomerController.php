@@ -553,4 +553,15 @@ class CustomerController extends Controller
             return redirect()->back()->with('message', $result);
         }
     }
+
+    public function getChatCount(){
+        $chatsCount = Chat::where('status', 0)->get()->count();
+        $chatsCountPing = Chat::where('ping_status', 0)->get()->count();
+        $pings = Chat::where('ping_status', 0)->get();
+        foreach ($pings as $ping){
+            $ping->ping_status = 1;
+            $ping->update();
+        }
+        return json_encode(['count' => $chatsCount, 'pingCount' => $chatsCountPing]);
+    }
 }

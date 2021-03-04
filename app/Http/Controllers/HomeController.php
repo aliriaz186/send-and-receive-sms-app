@@ -90,6 +90,7 @@ class HomeController extends Controller
             $chat->message = $request->Body;
             $chat->id_chat = $chatParentId;
             $chat->status = 0;
+            $chat->ping_status = 0;
             $chat->save();
             print "<Response></Response>";
         }catch (\Exception $exception){

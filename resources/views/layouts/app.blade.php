@@ -119,7 +119,7 @@
                         <li class="" style="border: 1px solid white;border-bottom: 0px">
                             <a href="{{env('APP_URL')}}/chat" >
                                 <i class="fas fa-users"></i>
-                                <span>Chat <span style="color: white;font-size: 12px;background: red;padding: 2px 7px 2px 5px;border-radius: 10px;margin-left: 4px;">{{\App\Chat::where('status', 0)->get()->count()}}</span></span>
+                                <span>Chat <span style="color: white;font-size: 12px;background: red;padding: 2px 7px 2px 5px;border-radius: 10px;margin-left: 4px;" id="chat-count-dynamic"></span></span>
                             </a>
                         </li>
                         <li class="" style="border: 1px solid white;border-bottom: 0px">
@@ -156,6 +156,47 @@
         event.preventDefault();
        document.getElementById('logoutbtn').click();
     }
+    function notification_send(pingCount) {
+        if (Notification.permission !== 'granted')
+            Notification.requestPermission();
+        else {
+            var notification = new Notification('New Messages', {
+                icon: `{{asset('sms.png')}}`,
+                body: pingCount + ' New Meesages',
+            });
+            notification.onclick = function() {
+                window.open(`{{url('')}}`);
+            };
+        }
+    }
+
+    $(document).ready(function(){
+        if (!Notification) {
+            alert('Desktop notifications not available in your browser. Try Chromium.');
+            return;
+        }
+
+        if (Notification.permission !== 'granted'){
+            Notification.requestPermission();
+        }
+
+        getCountsFunction();
+
+    });
+
+    function getCountsFunction(){
+        $.get(`{{url('get-chat-ping-count')}}`, function(data, status){
+            let result = JSON.parse(data);
+            document.getElementById('chat-count-dynamic').innerText = result.count;
+            if(result.pingCount > 0){
+                notification_send(result.pingCount);
+            }
+        });
+        setTimeout(function () {
+            getCountsFunction();
+        }, 60000)
+    }
+
     jQuery(function ($) {
 
         $(".sidebar-dropdown > a").click(function () {

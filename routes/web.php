@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 //Route::get('edit/domain/{id}', "DomainsController@editDomain")->middleware('dashboard');
 Auth::routes();
 Route::get('/', "AdminController@loginPage")->middleware('checkAuth');
+Route::get('/get-chat-ping-count', "CustomerController@getChatCount");
 Route::post('/admin/login', "AdminController@login")->name('admin.login');
 //Route::get('admin-dashboard', "AdminController@adminDashboard");
 Route::post('admin-logout', "AdminController@logout")->name('admin.logout');

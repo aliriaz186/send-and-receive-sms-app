@@ -69,7 +69,7 @@
             <h3>Select All <input type="checkbox" name="chat-all" id="chat-all" onchange="checkAll()"></h3>
         </div>
         <table class="table" id="customer-table">
-            <thead style="background: #05728f">
+            <thead style="background: #05728f;color: white">
             <tr>
                 <th style="width: 10%">Select</th>
                 <th>#</th>
