@@ -176,6 +176,31 @@ class CustomerController extends Controller
                     })->count();
                 $totalFiltered = $totalData;
             }
+            elseif ($request->type == "repliedyes"){
+                $chatsTemp = DB::table('chat_parents')
+                    ->whereExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chats')
+                            ->whereRaw('chat_parents.id = chats.id_chat')
+                            ->whereRaw('chat_parents.number = chats.sender');
+                    })
+                    ->offset($start)->limit($limit)->get();
+
+                $totalData =  DB::table('chat_parents')
+                    ->whereExists( function ($query) use ($limit) {
+                        $query->select(DB::raw(1))
+                            ->from('chats')
+                            ->whereRaw('chat_parents.id = chats.id_chat')
+                            ->whereRaw('chat_parents.number = chats.sender');
+                    })->count();
+                $chats = [];
+                foreach ($chatsTemp as $chat){
+                    if (Chat::where('sender', $chat->number)->where('message', 'yes')->exists() || Chat::where('sender', $chat->number)->where('message', 'ye')->exists() || Chat::where('sender', $chat->number)->where('message', 'y')->exists() || Chat::where('sender', $chat->number)->where('message', 'Y')->exists() || Chat::where('sender', $chat->number)->where('message', 'YE')->exists() || Chat::where('sender', $chat->number)->where('message', 'YES')->exists()){
+                        array_push($chats, $chat);
+                    }
+                }
+                $totalFiltered = count($chats);
+            }
         } else {
             $search = $request->input('search.value');
             $customers = Customer::where('name', 'LIKE', "%{$search}%")->get();

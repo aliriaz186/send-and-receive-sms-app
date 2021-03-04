@@ -12,14 +12,17 @@
     <div style="margin-left: 25px;padding: 15px;">
         <h3>Filter Chats</h3>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
                     <button class="btn btn-success" id="all-chats" style="width: 90%" onclick="getChats('all')">All Chats</button>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                     <button  style="width: 90%" id="replied-chats" class="btn btn-block" onclick="getChats('replied')">Replied</button>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                     <button  style="width: 90%" id="notreplied-chats" class="btn btn-block" onclick="getChats('notreplied')">Not Replied Yet</button>
+            </div>
+            <div class="col-md-2">
+                    <button  style="width: 90%" id="repliedyes-chats" class="btn btn-block" onclick="getChats('repliedyes')">Replied with YES</button>
             </div>
         </div>
     </div>
@@ -141,6 +144,7 @@
             document.getElementById('all-chats').classList.remove('btn-success');
             document.getElementById('replied-chats').classList.remove('btn-success');
             document.getElementById('notreplied-chats').classList.remove('btn-success');
+            document.getElementById('repliedyes-chats').classList.remove('btn-success');
             document.getElementById(type+'-chats').classList.remove('btn-block');
             document.getElementById(type+'-chats').classList.add('btn-success');
             $("#chats-table").DataTable().destroy();
