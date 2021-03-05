@@ -285,6 +285,9 @@ class CustomerController extends Controller
         if (Customer::where('number', $request->number)->exists()){
             return redirect()->back()->withErrors('Phone number already Exists');
         }
+        if ($request->messageTemplate == 'custommessage'){
+            $request->messageTemplate = $request->custom_message;
+        }
         if($request->checker == 'default')
         {
 
@@ -321,7 +324,6 @@ class CustomerController extends Controller
             else {
                 $chat->sender = Staff::where('id', Session::get('id'))->first()['name'];
             }
-
             $chat->message = $request->messageTemplate;
             $chat->id_chat = $chatParent->id;
             $chat->save();

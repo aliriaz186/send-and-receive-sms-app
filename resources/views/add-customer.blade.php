@@ -28,11 +28,15 @@
                 </div>
                 <div class="form-group" id="message-template-div" style="display: none">
                     <label>Select Message Template:</label>
-                    <select class="form-control" name="messageTemplate" id="messageTemplate">
+                    <select class="form-control" name="messageTemplate" id="messageTemplate" onchange="openCustom(this.value)">
                         @foreach(\App\MessageTemplate::all() as $template)
                             <option value="{{$template->message}}">{{$template->title}}</option>
+                            <option value="custommessage">Custom Message</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="open-custom-input" style="display: none" name="custom_message" placeholder="enter custom message"></textarea>
                 </div>
                 <button type="submit" id="btnFetch" class="btn btn-primary spinner-border">Save</button>
                 <button type="submit" id="smsSendButton" class="btn btn-primary spinner-border" disabled>Save and Send SMS</button>
@@ -47,7 +51,13 @@
         //     }
         // }
 
-
+        function openCustom(val) {
+            if(val === 'custommessage'){
+                document.getElementById('open-custom-input').style.display = 'block';
+            }else{
+                document.getElementById('open-custom-input').style.display = 'none';
+            }
+        }
         function addCustomerValidation() {
             var name = document.forms["customerForm"]["name"];
             var number = document.forms["customerForm"]["number"];

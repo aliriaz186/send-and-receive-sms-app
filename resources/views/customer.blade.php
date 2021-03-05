@@ -51,11 +51,16 @@
                 <div class="modal-body">
                     <div class="form-group" id="message-template-div">
                         <label>Select Message Template:</label>
-                        <select class="form-control" name="messageTemplate" id="messageTemplate">
+                        <select class="form-control" name="messageTemplate" id="messageTemplate"  onchange="openCustom(this.value)">
                             @foreach(\App\MessageTemplate::all() as $template)
                                 <option value="{{$template->message}}">{{$template->title}}</option>
+                                <option value="custommessage">Custom Message</option>
                             @endforeach
                         </select>
+
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="open-custom-input" style="display: none" name="custom_message" placeholder="enter custom message"></textarea>
                     </div>
                     <button onclick="uploadExcelFile('save-only')" type="button" class="btn btn-secondary" data-dismiss="modal">Just Save Contacts</button>
                     <button onclick="uploadExcelFile('sms-also')"  type="button" class="btn btn-primary">Save contacts and also send sms</button>
@@ -197,6 +202,15 @@
             ],
         });
     }
+
+    function openCustom(val) {
+        if(val === 'custommessage'){
+            document.getElementById('open-custom-input').style.display = 'block';
+        }else{
+            document.getElementById('open-custom-input').style.display = 'none';
+        }
+    }
+
     function openModal() {
         document.getElementById('openModal').click();
     }
@@ -205,6 +219,7 @@
         let formData = new FormData();
         formData.append("select_file", document.getElementById('select_file').files[0]);
         formData.append("messageTemplate", document.getElementById('messageTemplate').value);
+        formData.append("custom_message", document.getElementById('open-custom-input').value);
         formData.append("_token", "{{ csrf_token() }}");
         formData.append("type", type);
         $.ajax

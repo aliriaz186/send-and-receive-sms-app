@@ -24,20 +24,23 @@ class ImportExcelController extends Controller
         $csvModal = new CSVModal();
         \Excel::import($csvModal, request()->file('select_file'));
         $dataList = $csvModal->getData();
-
+        if ($request->messageTemplate == 'custommessage'){
+            $request->messageTemplate = $request->custom_message;
+        }
         foreach ($dataList as $data) {
             $customer = new Customer();
             $customer->name = $data['name'];
             $request->number = $data['number'];
-            if(substr($request->number, 0, 2) != '+1')
-            {
-                if(substr($request->number, 0, 1) != '1')
-                {
-                    $request->number = '+1'. $request->number;
-                }else{
-                    $request->number = '+'. $request->number;
-                }
-            }
+            $request->number = '+'. $request->number;
+//            if(substr($request->number, 0, 2) != '+1')
+//            {
+//                if(substr($request->number, 0, 1) != '1')
+//                {
+//                    $request->number = '+1'. $request->number;
+//                }else{
+//                    $request->number = '+'. $request->number;
+//                }
+//            }
             if (!Customer::where('number', $request->number)->exists()){
                 $customer->number =  $request->number;
                 $customer->save();
