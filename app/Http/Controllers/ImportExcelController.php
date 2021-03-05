@@ -31,16 +31,15 @@ class ImportExcelController extends Controller
             $customer = new Customer();
             $customer->name = $data['name'];
             $request->number = $data['number'];
-            $request->number = '+'. $request->number;
-//            if(substr($request->number, 0, 2) != '+1')
-//            {
-//                if(substr($request->number, 0, 1) != '1')
-//                {
-//                    $request->number = '+1'. $request->number;
-//                }else{
-//                    $request->number = '+'. $request->number;
-//                }
-//            }
+            if(substr($request->number, 0, 2) != '+1')
+            {
+                if(substr($request->number, 0, 1) != '1')
+                {
+                    $request->number = '+1'. $request->number;
+                }else{
+                    $request->number = '+'. $request->number;
+                }
+            }
             if (!Customer::where('number', $request->number)->exists()){
                 $customer->number =  $request->number;
                 $customer->save();
